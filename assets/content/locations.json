@@ -1,0 +1,248 @@
+[
+  // "ambience" = taustaheli tsükkel (assets/audio/...), "in" = kuidas sõbrad telefonis ütlevad, kus nad on.
+
+  // ---------------------------------------------------------------- ALGUS
+  {
+    "id": "kaubamaja", "taxi": false,
+    "name": "Kaubamaja parkla", "in": "Kaubamaja parklas",
+    "subtitle": "TARTU · KESKLINN",
+    "image": "img/loc/kaubamaja.jpg",
+    "ambience": "audio/amb/kaubamaja.ogg",
+    "text": "Tühi parkla, üks vilkuv lamp, takso juba läinud. Rüütli terminalini on kolm minutit.",
+    "exits": [
+      { "label": "Kõnni Rüütli terminali", "do": [{ "time": 3 }, { "goto": "ruutli" }] }
+    ]
+  },
+
+  // ---------------------------------------------------------------- RÜÜTLI TERMINAL
+  {
+    "id": "ruutli",
+    "name": "Rüütli terminal", "in": "Rüütli terminalis",
+    "subtitle": "HAS KEBAB · BUSSIPEATUS · HALVAD OTSUSED",
+    "image": "img/loc/ruutli.jpg",
+    "ambience": "audio/amb/ruutli.ogg",
+    "text": "Terminal sumiseb. HASi järjekord ulatub uksest välja, pood on veel lahti ja keegi karjub tuvi peale.",
+    "actions": [
+      { "label": "Võta poest õlu",
+        "do": [{ "time": 5 }, { "money": -3 }, { "problem": 15 }, { "add": { "beers": 1, "drinks": 1 } }, { "flag": "had_beer" },
+               { "say": "Külm. Odav. Küsitav." }] },
+      { "label": "Osta pakk suitsu", "once": true, "if": [{ "not_item": "cigs" }],
+        "do": [{ "time": 5 }, { "money": -7 }, { "item": "cigs" },
+               { "say": "Värske pakk. Tunned juba, kuidas keegi platsi teisest otsast seda haistab." }] },
+      { "label": "Osta poest Kardole Red Bull ja pirukas", "show_if": [{ "task": "kardo_snack" }, { "not_item": "kardo_snack" }, { "not_flag": "fed_kardo" }],
+        "do": [{ "time": 5 }, { "money": -5 }, { "item": "kardo_snack" }, { "say": "Red Bull ja lihapirukas. Müüja vaatab sind nagu teaks ta, et see pole sinu jaoks." }] },
+      { "label": "Osta poest emale piima", "show_if": [{ "task": "milk_home" }, { "not_item": "milk" }],
+        "do": [{ "time": 3 }, { "money": -2 }, { "item": "milk" }, { "say": "Liiter piima. Kõige kainem ost, mis sa täna teinud oled." }] },
+      { "label": "Mine HASi kebabijärjekorda", "show_if": [{ "not_flag": "kebab_done" }], "next": "kebab_queue" }
+    ],
+    "exits": [
+      { "label": "Kõnni Rüütlile", "show_if": [{ "not_flag": "shortcut" }], "do": [{ "time": 10 }, { "goto": "ruutel" }] },
+      { "label": "Martini otsetee Rüütlile", "show_if": [{ "flag": "shortcut" }], "do": [{ "time": 6 }, { "goto": "ruutel" }] },
+      { "label": "Kõnni koju", "do": [{ "time": [30, 40] }, { "log": "Kõndisid terminalist koju. Võttis {time} minutit." }, { "goto": "home" }] }
+    ],
+    "encounters": [
+      { "id": "martin", "trigger": "enter", "chance": 0.85, "if": [{ "friend_here": "martin" }], "scene": "martin" },
+      { "id": "brawl_ruutli", "trigger": "action", "once": false,
+        "chance_scale": { "var": "problem", "from": 65, "to": 100, "min": 0.15, "max": 0.6 }, "scene": "altercation" }
+    ]
+  },
+
+  // ---------------------------------------------------------------- RÜÜTLI
+  {
+    "id": "ruutel",
+    "name": "Rüütli", "in": "Rüütli peal",
+    "subtitle": "SATIIR · SEIK · GENN ON 10 MIN EEMAL",
+    "image": "img/loc/ruutel.jpg",
+    "ambience": "audio/amb/ruutel.ogg",
+    "text": "Satiir helendab soojalt ja lõhnab mahaläinud õlle järele. Kõrval raputab Seiga bass aknaid. Genialistide klubini on kümme minutit kõndi.",
+    "exits": [
+      { "label": "Satiir: rahulikud õlled, head vaibid", "do": [{ "goto": "satiir" }] },
+      { "label": "Seik: klubi, üldse mitte õrn",         "do": [{ "goto": "seik" }] },
+      { "label": "Kõnni Genialistide klubisse",           "do": [{ "time": 10 }, { "goto": "genn" }] },
+      { "label": "Tagasi Rüütli terminali",              "do": [{ "time": 10 }, { "goto": "ruutli" }] },
+      { "label": "Jaluta Raekoja platsile",               "do": [{ "time": 6 }, { "goto": "raekoja" }] },
+      { "label": "Mine Emajõe äärde",                     "do": [{ "time": 15 }, { "goto": "emajogi" }] },
+      { "label": "Roni Toomemäele",                       "do": [{ "time": 12 }, { "goto": "toomemagi" }] },
+      { "label": "Kõnni koju",                           "do": [{ "time": [30, 40] }, { "log": "Kõndisid Rüütlilt koju. Võttis {time} minutit." }, { "goto": "home" }] }
+    ],
+    "encounters": [
+      { "id": "kermo", "trigger": "enter", "chance": 0.03, "scene": "kermo" },
+      { "id": "kermo_a", "trigger": "action", "chance": 0.03, "if": [{ "not_flag": "enc_kermo" }], "scene": "kermo" },
+      { "id": "brawl_ruutel", "trigger": "enter", "once": false,
+        "chance_scale": { "var": "problem", "from": 70, "to": 100, "min": 0.1, "max": 0.45 }, "scene": "altercation" }
+    ]
+  },
+
+  // ---------------------------------------------------------------- SATIIR
+  {
+    "id": "satiir",
+    "name": "Satiir", "in": "Satiiris",
+    "subtitle": "RAHULIKUD ÕLLED · HEAD VAIBID",
+    "image": "img/loc/satiir.jpg",
+    "ambience": "audio/amb/satiir.ogg",
+    "text": "Soe valgus, kleepuvad lauad, kitarr, mida keegi ei tunnista enda omaks. Leti taga on laadija, kui ilusti küsid.",
+    "actions": [
+      { "label": "Telli rahulik õlu",
+        "do": [{ "time": 15 }, { "money": -4 }, { "problem": 6 }, { "add": { "beers": 1, "drinks": 1 } },
+               { "say": "Aeglane pint. Vaibid on laitmatud." }] },
+      { "label": "Palu telefon laadima panna",
+        "do": [{ "time": 20 }, { "phone": 25 }, { "say": "Baarman paneb su laadima ja hoiab telefoni kakskümmend minutit pantvangis." }] },
+      { "label": "Istu nurka ja jahtu maha",
+        "do": [{ "time": 15 }, { "problem": -20 }, { "say": "Viisteist minutit lambi vahtimist. Tunned end jälle inimesena." }] }
+    ],
+    "exits": [
+      { "label": "Tagasi Rüütlile", "do": [{ "goto": "ruutel" }] }
+    ],
+    "encounters": [
+      { "id": "jasper_ain", "trigger": "enter", "chance": 0.85, "scene": "ain_intro" }
+    ]
+  },
+
+  // ---------------------------------------------------------------- SEIK
+  {
+    "id": "seik",
+    "name": "Seik", "in": "Seigas",
+    "subtitle": "PIDU · ÜLDSE MITTE ÕRN",
+    "image": "img/loc/seik.jpg",
+    "ambience": "audio/amb/seik.ogg",
+    "text": "Stroboskoop, higi, bassiliin, mida tunned plommides. Poisid on kuskil siin.",
+    "actions": [
+      { "label": "Mine tantsupõrandale",
+        "do": [{ "time": 20 }, { "problem": 12 }, { "aff": { "ain": 1 } }, { "flag": "danced" },
+               { "say": "Tantsid nagu keegi ei vaataks. Kahjuks vaatavad kõik. Ain hõiskab kuskilt." }] },
+      { "label": "Shotid leti ääres",
+        "do": [{ "time": 10 }, { "money": -10 }, { "problem": 25 }, { "add": { "shots": 1, "drinks": 1 } },
+               { "log": "Tegid Seigas shotte." },
+               { "say": "Ilmub kolm shotti. Keegi ei mäleta, et oleks tellinud. Maksad kõigi eest." }] },
+      { "label": "Suitsuruum", "if": [{ "item": "cigs" }], "locked": "Sul pole suitsu",
+        "do": [{ "time": 10 }, { "problem": -8 },
+               { "chance": 0.4, "then": [{ "aff": { "martin": 1 } }, { "say": "Martin on ka siin. Ta küsib ühe, muidugi. Räägite kümme minutit mitte millestki. Tore oli." }],
+                                "else": [{ "say": "Külm õhk, suits, keegi nutab telefoni. Pea läheb natuke selgemaks." }] }] }
+    ],
+    "exits": [
+      { "label": "Tagasi Rüütlile", "do": [{ "goto": "ruutel" }] }
+    ],
+    "encounters": [
+      { "id": "pretty_girl", "trigger": "action", "chance": 0.4, "scene": "girl" },
+      { "id": "brawl_seik", "trigger": "action", "once": false,
+        "chance_scale": { "var": "problem", "from": 60, "to": 100, "min": 0.15, "max": 0.65 }, "scene": "altercation" }
+    ]
+  },
+
+  // ---------------------------------------------------------------- GENIALISTIDE KLUBI
+  {
+    "id": "genn",
+    "name": "Genialistide klubi", "in": "Genialistide klubis",
+    "subtitle": "KONTSERDIÕHTU · KÕIK ON LUBATUD",
+    "image": "img/loc/genn.jpg",
+    "ambience": "audio/amb/genn.ogg",
+    "text": "Bänd häälestab neljandat korda. Rahvas on pooleldi kunstitudengid, pooleldi inimesed, kes eksisid Seika minnes ära.",
+    "actions": [
+      { "label": "Vaata üks sett ära", "if": [{ "var": "gig_sets", "<": 2 }], "locked": "Bänd on tänaseks lõpetanud",
+        "do": [{ "time": 25 }, { "problem": -15 }, { "add": { "gig_sets": 1 } }, { "flag": "saw_gig" },
+               { "say": "Vali, lohakas, täiuslik. Pärast on imelikult rahulik olla." }] },
+      { "label": "Õlu leti äärest",
+        "do": [{ "time": 10 }, { "money": -4 }, { "problem": 12 }, { "add": { "beers": 1, "drinks": 1 } },
+               { "say": "Baarman valab seda nagu oleks selle peale vihane." }] }
+    ],
+    "exits": [
+      { "label": "Kõnni tagasi Rüütlile", "do": [{ "time": 10 }, { "goto": "ruutel" }] },
+      { "label": "Kõnni koju", "do": [{ "time": [30, 40] }, { "log": "Kõndisid Gennist koju. Võttis {time} minutit." }, { "goto": "home" }] }
+    ],
+    "encounters": [
+      { "id": "tristan", "trigger": "enter", "chance": 0.95,
+        "outcomes": [{ "weight": 95, "scene": "tristan_offer" }, { "weight": 5, "scene": "tristan_done" }] }
+    ]
+  },
+
+  // ---------------------------------------------------------------- KOHAD, KUS MÄLU KUSTUMISE JÄREL ÄRKAD
+  {
+    "id": "toomemagi", "name": "Toomemägi", "in": "Toomemäel", "subtitle": "KUS MA OLEN", "image": "img/loc/toomemagi.jpg",
+    "ambience": "audio/amb/outside_quiet.ogg",
+    "text": "Märg muru. Pink. Inglisild on su kohal ja sul pole aimugi, kuidas sa mäkke said.",
+    "exits": [
+      { "label": "Komberda koju", "do": [{ "time": [25, 35] }, { "goto": "home" }] },
+      { "label": "Tagasi alla Rüütlile", "do": [{ "time": 12 }, { "goto": "ruutel" }] }
+    ]
+  },
+  {
+    "id": "emajogi", "name": "Emajõe kallas", "in": "Emajõe kaldal", "subtitle": "JÕEKALDAL", "image": "img/loc/emajogi.jpg",
+    "ambience": "audio/amb/river.ogg",
+    "text": "Jõgi on väga lähedal ja väga külm. Üks su kingadest on märg. Ainult üks.",
+    "exits": [
+      { "label": "Mine mööda jõge koju", "do": [{ "time": [30, 45] }, { "goto": "home" }] },
+      { "label": "Tagasi Rüütlile", "do": [{ "time": 15 }, { "goto": "ruutel" }] }
+    ]
+  },
+  {
+    "id": "raekoja", "name": "Raekoja plats", "in": "Raekoja platsil", "subtitle": "RAEKOJA PLATS", "image": "img/loc/raekoja.jpg",
+    "ambience": "audio/amb/outside_quiet.ogg",
+    "text": "Lamad Suudlevate tudengite purskkaevu kõrval. Tänavapuhastaja sõidab sinust viisakalt mööda. Nurgas põleb öökondiitri aknas silt. Keegi ei tea, miks öökondiiter olemas on.",
+    "actions": [
+      { "label": "Osta öökondiitrist tort (6 €)", "show_if": [{ "not_item": "torta" }, { "not_flag": "truuse_arrested" }], "if": [{ "var": "money", ">=": 6 }], "locked": "Raha ei jätku",
+        "do": [{ "time": 5 }, { "money": -6 }, { "item": "torta" },
+               { "say": "Müüja pakib tordi karpi. Karbil on käsitsi kirjutatud: „TORTA“. Ta ütleb vaikselt: „Ärge seda sõna valjult öelge.“ Sa ei saa aru, miks." }] },
+      { "label": "Anna Muki tema inimesele tagasi", "show_if": [{ "item": "dog" }],
+        "do": [{ "time": 3 }, { "remove_item": "dog" }, { "flag": ["dog_returned", "good_karma"] }, { "problem": -15 },
+               { "log": "Viisid koer Muki Raekoja platsile tema inimese juurde." },
+               { "say": "Pingil istub vanem proua termosega. Muki lendab talle sülle. Proua pakub sulle teed. See on parim tee, mis sa elus joonud oled." }] }
+    ],
+    "exits": [
+      { "label": "Kõnni koju", "do": [{ "time": [25, 35] }, { "goto": "home" }] },
+      { "label": "Tagasi Rüütlile", "do": [{ "time": 6 }, { "goto": "ruutel" }] }
+    ]
+  },
+  {
+    "id": "stairwell", "name": "Mingi trepikoda", "in": "mingis trepikojas", "subtitle": "MITTE SINU MAJA", "image": "img/loc/stairwell.jpg",
+    "ambience": "audio/amb/stairwell.ogg",
+    "text": "Võõras trepikoda. Tule taimer lülitub iga 30 sekundi tagant välja. Taskus on kebabipaber.",
+    "exits": [
+      { "label": "Saa aru, kus oled, ja kõnni koju", "do": [{ "time": [35, 50] }, { "goto": "home" }] }
+    ]
+  },
+  {
+    "id": "annelinn", "name": "Annelinna bussipeatus", "in": "Annelinnas", "subtitle": "VÄGA KAUGEL KÕIGEST", "image": "img/loc/annelinn.jpg",
+    "ambience": "audio/amb/outside_quiet.ogg",
+    "text": "Annelinn. Betooni nii kaugele kui silm ulatub. Esimene buss tuleb kolme tunni pärast.",
+    "exits": [
+      { "label": "Alusta pikka kõndi koju", "do": [{ "time": [50, 70] }, { "goto": "home" }] }
+    ]
+  },
+  {
+    "id": "police_bench", "name": "Pink", "in": "ühel pingil", "subtitle": "05:XX · SINISED TULED", "image": "img/loc/police_bench.jpg",
+    "ambience": "audio/amb/dawn.ogg",
+    "text": "Taevas läheb halliks. Pead liikuma. Kohe.",
+    "exits": [
+      { "label": "Jookse koju", "do": [{ "time": [20, 30] }, { "goto": "home" }] }
+    ]
+  },
+
+  // ---------------------------------------------------------------- KODU
+  // Kui võtmed on kadunud, satud koju minnes hoopis ukse taha.
+  {
+    "id": "home_door", "name": "Sinu ukse taga", "in": "oma ukse taga", "subtitle": "VÕTMED ON KADUNUD", "image": "img/loc/home.jpg", "taxi": false,
+    "ambience": "audio/amb/stairwell.ogg",
+    "text": "Sinu uks. Sinu voodi on teisel pool. Võtmeid sul ei ole.",
+    "actions": [
+      { "label": "Helista toakaaslasele, et ta ukse avaks", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -2 }, { "time": [10, 25] },
+               { "chance": 0.55,
+                 "then": [{ "unflag": "lost_keys" }, { "log": "Toakaaslane tegi su jaoks ukse lahti. Pidžaamas ja kurjana." }, { "goto": "home" }],
+                 "else": [{ "say": "Kutsub ja kutsub. Ta magab nagu kivi. Või ignoreerib sind teadlikult." }] }] },
+      { "label": "Proovi aknast sisse ronida",
+        "do": [{ "time": 10 },
+               { "chance": { "var": "problem", "from": 20, "to": 100, "min": 0.6, "max": 0.1 },
+                 "then": [{ "unflag": "lost_keys" }, { "log": "Ronisid aknast koju. Naabrid nägid." }, { "goto": "home" }],
+                 "else": [{ "problem": 12 }, { "phone": -5 }, { "say": "Kukud põõsasse. Naaber teeb akna lahti ja vaatab sind pikalt." }] }] },
+      { "label": "Koputa naabrile", "do": [{ "time": 10 },
+        { "chance": 0.3, "then": [{ "unflag": "lost_keys" }, { "log": "Naaber lasi su läbi rõdu koju. Ta ei unusta seda." }, { "goto": "home" }],
+                         "else": [{ "problem": 10 }, { "say": "Naaber ütleb uksesilma kaudu midagi, mida ei saa siia kirja panna." }] }] },
+      { "label": "Maga trepikojas", "do": [{ "log": "Magasid trepikojas oma ukse taga." }, { "end": "locked_out" }] }
+    ]
+  },
+
+  { "id": "home", "name": "Kodu", "in": "kodus", "subtitle": "LÕPUKS", "image": "img/loc/home.jpg", "home": true,
+    "gate": { "if": [{ "flag": "lost_keys" }], "to": "home_door" },
+    "ambience": "audio/amb/outside_quiet.ogg",
+    "text": "Sinu uks. Sinu võtmed, kuidagi. Sinu voodi." }
+]

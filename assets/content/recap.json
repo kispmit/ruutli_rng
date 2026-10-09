@@ -1,0 +1,58 @@
+[
+  // "night": lisaread jaotisesse SINU ÖÖ, kui tingimused klapivad (pärast sündmuste logi).
+  { "section": "night", "if": [{ "var": "drinks", ">=": 8 }], "text": "Jooke täna: liiga palju." },
+  { "section": "night", "if": [{ "flag": "shortcut" }],      "text": "Õppisid ära Martini hooviotsetee. Kainena ei leia seda enam kunagi." },
+  { "section": "night", "if": [{ "flag": "lent_tristan" }],  "text": "Laenasid Tristanile 10 eurot. Neid sa enam ei näe." },
+  { "section": "night", "if": [{ "var": "phone", "<=": 0 }], "text": "Telefon suri kuskil teepeal ära." },
+  { "section": "night", "if": [{ "var": "money", "<=": 0 }], "text": "Öö lõppes täiesti nullis." },
+
+  // "friends": iga tegelase kohta esimene sobiv rida, ainult nende kohta, keda öösel nägid.
+  { "section": "friends", "npc": "martin",  "if": [{ "var": "aff_martin", ">=": 4 }],  "text": "Martin on sulle võlgu. Ta ütles seda valjult, tunnistajate ees." },
+  { "section": "friends", "npc": "martin",  "if": [{ "var": "aff_martin", ">=": 1 }],  "text": "Martin tutvustab sind nüüd kui „minu bro“. Keegi ei tea, millega Martin tegeleb." },
+  { "section": "friends", "npc": "martin",  "if": [{ "var": "aff_martin", "<=": -2 }], "text": "Martin läheb nüüd tänava teisele poole, kui sind näeb." },
+  { "section": "friends", "npc": "martin",  "text": "Martin ei mäleta sind. Martin ei mäleta mitte kedagi." },
+
+  { "section": "friends", "npc": "ain",     "if": [{ "var": "aff_ain", ">=": 4 }],  "text": "Ain peab sind nüüd oma bestieks. Ta on sulle juba kolm korda kirjutanud." },
+  { "section": "friends", "npc": "ain",     "if": [{ "var": "aff_ain", ">=": 1 }],  "text": "Ain ütleb, et sa oled „okei“. Aini suust on see medal." },
+  { "section": "friends", "npc": "ain",     "if": [{ "var": "aff_ain", "<=": -2 }], "text": "Ain on ikka veel solvunud. Ta toob selle su pulmas jutuks." },
+  { "section": "friends", "npc": "ain",     "text": "Ain vaevu mäletab, et sa seal olid." },
+
+  { "section": "friends", "npc": "jasper",  "if": [{ "flag": "jasper_dream" }], "text": "Jasper kirjutas sinu nime oma ema tulevase maja katusesõrestiku plaanile. Pliiatsiga. Aga siiski." },
+  { "section": "friends", "npc": "jasper",  "if": [{ "flag": "jasper_sent_home" }], "text": "Jasper jõudis kell seitse objektile. Rein ütles „tubli“. Jasper ütles Reinile, et see oli sinu teene." },
+  { "section": "friends", "npc": "jasper",  "if": [{ "flag": "jasper_stayed" }], "text": "Jasper jäi objektile hiljaks. Ta laulis tellingutel terve päeva sinust. Rein teab nüüd su nime." },
+  { "section": "friends", "npc": "jasper",  "if": [{ "var": "aff_jasper", ">=": 3 }],  "text": "Jasper tahab sinuga koori asutada. Tal on nimi juba olemas." },
+  { "section": "friends", "npc": "jasper",  "if": [{ "var": "aff_jasper", ">=": 1 }],  "text": "Jasper ütleb, et sa oled üks väheseid Tartus, kes oskab kuulata." },
+  { "section": "friends", "npc": "jasper",  "if": [{ "var": "aff_jasper", "<=": -2 }], "text": "Jasper kirjutas sinust laulu. See pole ilus laul." },
+  { "section": "friends", "npc": "jasper",  "text": "Jasper noogutab sulle ja läheb magama. Kell seitse on tal betoon." },
+
+  { "section": "friends", "npc": "tristan", "if": [{ "flag": "sent_tristan_home" }],     "text": "Tristan ärkas oma voodis ega tea, et see olid sina. Ikkagi, austus." },
+  { "section": "friends", "npc": "tristan", "if": [{ "var": "aff_tristan", ">=": 2 }],  "text": "Tristan kutsub sind oma Westoni-bestieks. Sa ei toibu sellest kunagi täielikult." },
+  { "section": "friends", "npc": "tristan", "if": [{ "var": "aff_tristan", "<=": -2 }], "text": "Tristan on sinus pettunud. Sügavalt. Vaikselt." },
+  { "section": "friends", "npc": "tristan", "text": "Tristan on tänase öö juba unustanud. Kõik sellest." },
+
+  { "section": "friends", "npc": "",        "if": [{ "flag": "friend_taxi" }], "text": "{friend} maksis su takso koju. See tuleb veel jutuks." },
+  { "section": "friends", "npc": "",        "if": [{ "var": "friends_met", "<=": 0 }], "text": "Sa ei näinud terve öö mitte ühtegi poistest. Kas nad üldse olid väljas?" },
+
+  { "section": "friends", "npc": "truuse", "if": [{ "flag": "truuse_arrested" }], "text": "Truuse veetis öö kongis. Protokollis on põhjuse lahtris üks sõna: „TORTA“." },
+  { "section": "friends", "npc": "truuse", "if": [{ "var": "aff_truuse", ">=": 2 }], "text": "Truuse lubas sulle oma hobuse Kalevipojaga sõita. Hobust ei ole olemas. Lubadus on siiras." },
+  { "section": "friends", "npc": "truuse", "text": "Truuse räägib kellelegi praegu sinust. Pool sellest on tõsi." },
+  { "section": "friends", "npc": "kaarna",   "if": [{ "var": "aff_kaarna", ">=": 2 }], "text": "Kaarna ütles, et sa olid ainus normaalne inimene terve öö jooksul." },
+  { "section": "friends", "npc": "kaarna",   "text": "Kaarna on ikka veel Truusega. Keegi ei tea, kuidas." },
+  { "section": "friends", "npc": "mart",     "if": [{ "flag": "mart_peace" }], "text": "Märt ja Ain on jälle sõbrad. Selle tegi võimalikuks üks 4-eurone õlu. Ja sina." },
+  { "section": "friends", "npc": "mart",     "text": "Märt otsib Aini ikka veel. Ain on ikka veel kadunud." },
+  { "section": "friends", "npc": "annu",     "if": [{ "var": "aff_annu", ">=": 2 }], "text": "Annu saatis sulle oma vanaema leivaretsepti. Kolm lehekülge. Köömned on alla joonitud." },
+  { "section": "friends", "npc": "annu",     "text": "Annu peab sind „noorte põlvkonna“ esindajaks. Mitte heas mõttes, aga ka mitte halvas." },
+  { "section": "friends", "npc": "ets",      "if": [{ "var": "aff_ets", ">=": 2 }], "text": "Ets kasutab nüüd sinu su ema nalja. Ta ütleb, et mõtles selle ise välja." },
+  { "section": "friends", "npc": "ets",      "text": "Ets rääkis sulle kiisunalja. Sa mäletad seda veel aastaid. Kahjuks." },
+  { "section": "friends", "npc": "janno",    "if": [{ "flag": "casino_up" }], "text": "Janno räägib kõigile, et sa oled kasiino legend. Andre parandab: „Statistiline kõrvalekalle.“" },
+  { "section": "friends", "npc": "janno",    "text": "Janno on endiselt kõige toredam poiss Tartus. Kasiino on endiselt maja." },
+  { "section": "friends", "npc": "jaan",     "if": [{ "flag": "nuclear_talk" }], "text": "Jaan saatis sulle kolm teadusartiklit. Ta usub sinusse. Kahjuks." },
+  { "section": "friends", "npc": "jaan",     "text": "Jaan magas kell kolm. Nagu alati." },
+  { "section": "friends", "npc": "kardo",    "if": [{ "flag": "fed_kardo" }], "text": "Kardo räägib kõigile, et sa oled ainus, kes talle kunagi midagi toonud on. Pirukas oli lihapirukas. Ta mäletab seda." },
+  { "section": "friends", "npc": "kardo",    "if": [{ "var": "kardo_saves", ">=": 1 }], "text": "Kardo päästis su täna vähemalt korra. Tal on sellest video. Kaustas „TÕENDID“." },
+  { "section": "friends", "npc": "kardo",    "text": "Kardo oli kaine, mäletab kõike ja ei räägi sellest kellelegi. Super kutt." },
+  { "section": "night", "if": [{ "flag": "filmed_torta" }], "text": "Sinu video „TORTA“ on hommikuks 12 000 vaatamisega. Truuse küsis, kas ta saab sellest raha." },
+  { "section": "night", "if": [{ "item": "cone" }], "text": "Kalle (liikluskoonus) elab nüüd sinu toas." },
+  { "section": "night", "if": [{ "flag": "met_kermo" }], "text": "Kohtasid Rüütlil Kermot. Sa ei tulista esimesena. Sa ei tulista ka teisena." },
+  { "section": "night", "if": [{ "flag": "vuksid_movement" }], "text": "Kardo saatis linnavalitsusele kirja. Teema: „Nurks → Vennad Vuksid“. Vastust pole veel tulnud." }
+]

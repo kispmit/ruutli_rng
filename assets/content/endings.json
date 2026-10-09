@@ -1,0 +1,8 @@
+[
+  { "id": "success",      "tone": "good",    "title": "JÕUDSID KOJU",            "subtitle": "Enne päikesetõusu ja kõik tehtud. Legendaarne käitumine." },
+  { "id": "unsuccessful", "tone": "neutral", "title": "EBAÕNNESTUNUD VÄLJAMINEK", "subtitle": "Oled kodus. Midagi ei juhtunud. Ülesanded jäid tegemata." },
+  { "id": "robbed",       "tone": "bad",     "title": "RÖÖVITUD",                "subtitle": "Ta tundus nii tore. Sinu asjad tundusid nii sinu omad." },
+  { "id": "detained",     "tone": "bad",     "title": "KINNI PEETUD",            "subtitle": "Päike tõusis. Vaatasid seda läbi väga väikese akna." },
+  { "id": "locked_out",   "tone": "bad",     "title": "UKSE TAGA",               "subtitle": "Sa jõudsid koju. Sisse sa ei jõudnud. Trepikoja põrand on külm." },
+  { "id": "sunrise",      "tone": "bad",     "title": "PÄIKESETÕUS",             "subtitle": "Sa ei jõudnud koju. Valgus leidis su enne üles." }
+]

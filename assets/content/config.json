@@ -1,0 +1,417 @@
+{
+  // Mängu üldreeglid. Kommentaarid on kõigis sisufailides lubatud.
+  "start_time": "00:00",
+  "tape_date": "04/24/2024",          // kaamera ajatempel (sama mis menüü pildil)
+  "phone_date": "Kolmapäev, 24. aprill",
+  "sunrise": "06:00",
+  "start_location": "kaubamaja",
+  "home_location": "home",
+  "intro_scene": "intro",
+  "meltdown_scene": "meltdown",
+
+  // Algväärtused. [min, max] = juhuslik vahemik.
+  "start": { "phone": 55, "problem": [40, 60], "money": 80 },
+  "time_scale": 0.75,                 // kõik tegevused võtavad 75% kirjas olevast ajast (öö kestab kauem)
+  "phone_drain_per_hour": 9,
+  "problem_decay_per_hour": 7,        // nii palju langeb probleem tunnis iseenesest
+
+  // Poisid. haunts = kus nad öö jooksul tõenäoliselt on (kaal), meet = stseenid, kui nendega kokku saad
+  // (viimane on korduv varuvariant).
+  "friends": {
+    "martin":  { "name": "Martin",  "gen": "Martini",  "haunts": { "ruutli": 5, "ruutel": 3, "seik": 2 },
+                 "meet": ["m_lighter", "m_deal", "m_favor", "meet_martin"] },
+    "jasper":  { "name": "Jasper",  "gen": "Jasperi",  "haunts": { "satiir": 5, "genn": 3, "ruutel": 2 },
+                 "meet": ["j_site", "j_deep", "j_q1", "j_level", "j_charger", "j_q2", "j_dream", "j_duet", "j_q3", "j_q4", "j_q5", "j_q6", "j_q7", "j_q8", "meet_jasper"] },
+    "ain":     { "name": "Ain",     "gen": "Aini",     "haunts": { "satiir": 3, "seik": 4, "ruutel": 2 },
+                 "meet": ["a_round", "a_arm", "a_seik", "meet_ain"] },
+    "tristan": { "name": "Tristan", "gen": "Tristani", "haunts": { "genn": 5, "seik": 3, "ruutli": 1 },
+                 "meet": ["t_dare", "t_borrow", "tristan_offer", "meet_tristan"] },
+    "truuse":  { "name": "Truuse",  "gen": "Truuse",   "haunts": { "ruutel": 4, "ruutli": 4, "satiir": 1 },
+                 "meet": ["tk_pigeons", "tk_horse", "tk_river", "meet_truuse"] },
+    "ets":     { "name": "Ets",     "gen": "Etsi",     "haunts": { "ruutli": 3, "ruutel": 3, "satiir": 2, "seik": 2, "genn": 2 },
+                 "meet": ["ets"] },
+    "janno":   { "name": "Janno",   "gen": "Janno",    "haunts": { "ruutel": 3, "seik": 3, "satiir": 2, "genn": 2, "ruutli": 2 },
+                 "meet": ["janno", "janno_back"] },
+    // Kardo on kaine. Ta on ikka kohal. Ta karjub, kui vaja.
+    "kardo":   { "name": "Kardo",   "gen": "Kardo",    "haunts": { "ruutel": 3, "satiir": 3, "seik": 2, "genn": 2, "ruutli": 2 },
+                 "meet": ["kardo_meet", "meet_kardo"] },
+    // presence = tõenäosus, et ta üldse täna linna tuleb (veeretatakse kord öö kohta). until = siis läheb koju magama.
+    "jaan":    { "name": "Jaan",    "gen": "Jaani",    "haunts": { "genn": 3, "satiir": 2, "ruutel": 1 },
+                 "presence": 0.1, "until": "03:00", "meet": ["jaan_meet"] }
+  },
+
+  // Kui samas kohas on 2+ poissi, ajavad nad omavahel juttu ja sa saad sekka lüüa.
+  // talks = kindlate inimeste jutud (needs), generic = ükskõik kellega ({a}, {b}, {a_gen}...). Viimane generic kordub.
+  "groups": {
+    "enter_chance": 0.6,
+    "talks": [
+      { "scene": "g_ain_jasper",     "needs": ["ain", "jasper"] },
+      { "scene": "g_martin_tristan", "needs": ["martin", "tristan"] },
+      { "scene": "g_ets_jasper",     "needs": ["ets", "jasper"] },
+      { "scene": "g_truuse_jaan",    "needs": ["truuse", "jaan"] },
+      { "scene": "g_janno_ain",      "needs": ["janno", "ain"] },
+      { "scene": "g_martin_ets",     "needs": ["martin", "ets"] },
+      { "scene": "g_tristan_janno",  "needs": ["tristan", "janno"] },
+      { "scene": "g_jasper_jaan",    "needs": ["jasper", "jaan"] },
+      { "scene": "g_ain_martin",     "needs": ["ain", "martin"] },
+      { "scene": "g_truuse_ets",     "needs": ["truuse", "ets"] },
+      { "scene": "g_janno_jasper",   "needs": ["janno", "jasper"] },
+      { "scene": "g_tristan_truuse", "needs": ["tristan", "truuse"] },
+      { "scene": "g_kardo_tristan",  "needs": ["kardo", "tristan"] },
+      { "scene": "g_kardo_martin",   "needs": ["kardo", "martin"] },
+      { "scene": "g_kardo_ain",      "needs": ["kardo", "ain"] },
+      { "scene": "g_ain_kardo_nurks","needs": ["ain", "kardo"] },
+      { "scene": "g_kardo_jasper",   "needs": ["kardo", "jasper"], "if": [{ "after": "02:30" }] },
+      { "scene": "g_kardo_ets",      "needs": ["kardo", "ets"] },
+      { "scene": "g_kardo_janno",    "needs": ["kardo", "janno"], "if": [{ "before": "05:00" }] },
+      { "scene": "g_kardo_truuse",   "needs": ["kardo", "truuse"] },
+      { "scene": "g_kardo_jaan",     "needs": ["kardo", "jaan"] }
+    ],
+    "generic": ["g_kebab", "g_plan", "g_bet", "g_photo", "g_story", "g_who_pays", "g_hang"]
+  },
+
+  // Kes kõneleb -> tegelase pilt (assets/img/char). Stseen võib ka ise "portrait" määrata.
+  "portraits": {
+    "MARTIN": "img/char/martin.png", "JASPER": "img/char/jasper.png", "AIN": "img/char/ain.png", "TRISTAN": "img/char/tristan.png",
+    "JASPER JA AIN": "img/char/jasper.png", "POISID": "img/char/ain.png", "???": "img/char/girl.png",
+    "MINGI TÜÜP": "img/char/tracksuit.png", "TURVAMEES": "img/char/bouncer.png", "POLITSEI": "img/char/police.png",
+    "TÄNAVAMUUSIK": "img/char/busker.png", "TURISTID": "img/char/woman.png", "PROMOTÜDRUK": "img/char/girl.png",
+    "ÕPPEJÕUD": "img/char/professor.png", "ERASMUSE TUDENG": "img/char/erasmus.png", "KASS": "img/char/cat.png",
+    "KLASSIÕDE": "img/char/woman.png", "KEBABIVARAS": "img/char/guy.png", "BAARMAN": "img/char/guy.png",
+    "RAHAKOTI OMANIK": "img/char/tracksuit.png", "JASPERI EKS": "img/char/woman.png", "TOAKAASLANE": "img/char/guy.png",
+    "TRUUSE JA KAARNA": ["img/char/truuse.png", "img/char/kaarna.png"], "TRUUSE": "img/char/truuse.png", "KAARNA": "img/char/kaarna.png",
+    "MÄRT": "img/char/mart.png", "MÄRT JA AIN": ["img/char/mart.png", "img/char/ain.png"], "ANNU": "img/char/annu.png",
+    "ETS": "img/char/ets.png", "JANNO JA ANDRE": ["img/char/janno.png", "img/char/andre.png"], "JAAN": "img/char/jaan.png", "JANNO": "img/char/janno.png", "KARDO": "img/char/kardo.png", "KERMO": "img/char/kermo.png"
+  },
+
+  // Kõndimisajad minutites (mõlemas suunas). Kasutatakse, kui lähed sõbra juurde või tema sinu juurde.
+  "travel": {
+    "kaubamaja-ruutli": 3, "ruutli-ruutel": 10, "ruutel-satiir": 0, "ruutel-seik": 0, "ruutel-genn": 10,
+    "ruutel-toomemagi": 12, "ruutel-emajogi": 15, "ruutel-raekoja": 6, "ruutel-stairwell": 20,
+    "ruutel-annelinn": 40, "ruutel-police_bench": 15, "ruutel-home": 35, "ruutli-home": 35, "genn-home": 35,
+    "home-home_door": 0
+  },
+
+  // Ülesanded: 2 "mine tee midagi" + 1 tingimus selle kohta, kuidas koju jõuad (+ mis telefoni teel lisandub).
+  // "final" ülesandeid kontrollitakse alles kodus (ekraanil näitab vahepeal GRAAFIKUS / RIVIST VÄLJAS).
+  "task_groups": [
+    { "count": 2, "pool": ["kebab_home", "martin_owes", "full_set", "all_venues", "win_fight", "get_number",
+                           "six_drinks", "squad", "tristan_home", "whole_gig", "nuclear", "side_four"] },
+    { "count": 1, "pool": ["cash_50", "battery_40", "no_blackout", "early_home", "no_taxi"],
+      "weights": { "early_home": 0.35 } }
+  ],
+
+  // Kõrvalülesanded tulevad terve öö telefoni (max_active korraga lahti). Põhiülesanded = need, mis said alguses.
+  "side_quests": {
+    "first_at": "00:12",
+    "every": [15, 25],
+    "max_active": 4,
+    "pool": [
+      { "task": "sq_dance",      "from": "Ain",       "text": "SEIK. TANTSUPÕRAND. KOHE. ma ootan", "if": [{ "before": "05:00" }] },
+      { "task": "sq_gig",        "from": "Tristan",   "text": "bro gennis on bänd. nad on sitad. nad on PARIMAD. tule vaata asap", "if": [{ "var": "gig_sets", "<": 2 }, { "before": "04:30" }] },
+      { "task": "sq_charge",     "from": "Kardo",     "text": "lae oma telefon vähemalt 70% peale. ma tahan hommikul teada, et sa elus oled" },
+      { "task": "sq_chill",      "from": "Kardo",     "text": "ma näen su storyst, et sa oled liiga kõrgel. jahtu maha. probleem alla 20. see on käsk", "if": [{ "var": "problem", ">": 30 }] },
+      { "task": "sq_toome",      "from": "Jasper",    "text": "lähme toomele. sealt näeb mu ehitust. tule ka", "if": [{ "not_visited": "toomemagi" }],
+        "replies": [{ "label": "Lähme! (kõnnin kohe)", "do": [{ "aff": { "jasper": 1 } }, { "walk_to": "toomemagi" }, { "say": "Jasper on juba üleval ja osutab pimedusse: „Seal. See kraana. See on minu oma.“ Ta ei ole tema oma. Aga ta ehitab selle all." }] },
+                     { "label": "Hiljem", "do": [] }] },
+      { "task": "sq_river",      "from": "Jasper",    "text": "truuse väidab jälle et emajõgi voolab täna tagurpidi. lähme kontrollime voolusuunda. ehitusmehena mul on vesilood kaasas", "if": [{ "not_visited": "emajogi" }],
+        "replies": [{ "label": "Lähme kontrollime!", "do": [{ "aff": { "jasper": 1 } }, { "walk_to": "emajogi" }, { "log": "Käisid Jasperiga Emajõe voolusuunda kontrollimas." }, { "say": "Jasper paneb vesiloodi kaldale ja vaatab mullikest. Siis vett. Siis mullikest. „Õigetpidi. Truuse eksis.“ Ta teeb sellest pildi tõendiks." }] },
+                     { "label": "Hiljem", "do": [] }] },
+      { "task": "sq_raekoja",    "from": "Kaarna",    "text": "palun mine raekoja platsile ja saada pilt suudlevatest tudengitest. truuse ütleb et nad liiguvad. tahan tõestada et ei liigu", "if": [{ "not_visited": "raekoja" }],
+        "replies": [{ "label": "Lähen kohe", "do": [{ "aff": { "kaarna": 1 } }, { "walk_to": "raekoja" }, { "say": "Teed pildi. Tudengid ei liigu. Kaarna vastab ühe sõnaga: „AITÄH.“" }] },
+                     { "label": "Hiljem", "do": [] }] },
+      { "task": "sq_kebab",      "from": "Martin",    "text": "has on täna eriti hea, ausalt. sa pead seda sööma. trust me", "if": [{ "not_flag": "kebab_done" }, { "before": "04:30" }] },
+      { "task": "sq_ets",        "from": "Ets",       "text": "mul on uus kiisunali. ma ei saa seda telefonis rääkida. see on näost näkku nali", "if": [{ "not_flag": "met_ets" }] },
+      { "task": "sq_kardo",      "from": "Kardo",     "text": "ma olen kaine ja mul on igav. leia mind üles", "if": [{ "not_flag": "met_kardo" }] },
+      { "task": "sq_jaan",       "from": "Jaan",      "text": "Tere! Helista mulle enne kella kolme, mul on sulle üks tähelepanek prootonite kohta.", "if": [{ "before": "02:30" }] },
+      { "task": "sq_torta",      "from": "Tundmatu number", "text": "raekoja platsil on öökondiiter. osta sealt tort. ära küsi miks.", "if": [{ "not_flag": "truuse_arrested" }, { "not_item": "torta" }], "weight": 0.6 },
+      { "task": "sq_jasper_site","from": "Jasper",    "text": "kuule mul on sulle üks lugu objektist rääkida. see on pikk. leia mind üles" },
+      { "task": "sq_jasper_home","from": "Rein (Jasperi töödejuhataja)", "text": "Tere. Jasper peab kell 7.00 objektil olema. Kui sa teda näed, saada ta koju magama. Aitäh. Rein", "if": [{ "after": "01:30" }, { "before": "04:00" }, { "not_flag": "jasper_sent_home" }], "weight": 1.5 },
+      { "task": "sq_annu",       "from": "Annu",      "text": "noormees. kui sul suitsu on, tule Rüütlile. mul on sulle maailmast midagi öelda", "if": [{ "item": "cigs" }, { "not_flag": "met_annu" }] },
+      { "task": "sq_mart_peace", "from": "Märt",      "text": "kus ain on. ma tean et sa tead", "if": [{ "flag": "met_ain" }, { "not_flag": "mart_peace" }, { "not_flag": "enc_r_mart_vs_ain" }] },
+      { "task": "sq_round",      "from": "Poisid (grupp)", "text": "Ain: kelle kord on ringi teha\nMartin: mitte minu\nTristan: sinu kord", "if": [{ "not_flag": "bought_round" }] },
+      { "task": "sq_ain_money",  "from": "Jasper",    "text": "ma pean teadma kust aini raha tuleb. aita mul välja uurida", "if": [{ "not_flag": "ain_money_known" }] },
+      { "task": "casino_up",     "from": "Janno",     "text": "BROOO!!! KASIINO!!! leia mind üles ja me läheme. full send", "if": [{ "before": "04:00" }, { "not_flag": "casino_up" }] },
+      { "task": "charger_find",  "from": "Jasper",    "text": "kas keegi mu laadijat on näinud. valge. natuke kõver. emotsionaalne väärtus", "if": [{ "not_flag": "charger_returned" }] },
+      { "task": "group_photo3",  "from": "Kardo",     "text": "teeme täna lõpuks korraliku grupipildi. vähemalt kolm inimest peal. ma olen kaine, ma vastutan kvaliteedi eest", "if": [{ "not_flag": "group_photo3" }] },
+      { "task": "milk_home",     "from": "Ema",       "text": "Too homme hommikuks piima, kui koju tuled. Ära unusta. Ma tean, et sa unustad.", "weight": 0.7 }
+    ]
+  },
+
+  // Skoor lõpus. "points" = ühekordne, "count" + "per" = muutuja (või main_done, side_done, friends_like, all_main) korda punktid.
+  "score": [
+    { "label": "Jõudsid koju",                          "points": 100, "if": [{ "flag": "home" }] },
+    { "label": "Põhiülesanne",                          "count": "main_done", "per": 50 },
+    { "label": "Kõik põhiülesanded tehtud",             "count": "all_main", "per": 100, "show_count": false },
+    { "label": "Kõrvalülesanne",                        "count": "side_done", "per": 25 },
+    { "label": "Blackout, aga koju ilma politseita",    "points": 50, "if": [{ "flag": "blackout" }, { "flag": "home" }, { "not_visited": "police_bench" }] },
+    { "label": "Tristan saadetud turvaliselt koju",     "points": 50, "if": [{ "flag": "sent_tristan_home" }] },
+    { "label": "Jasper jõudis kell 7 objektile",        "points": 30, "if": [{ "flag": "jasper_sent_home" }] },
+    { "label": "Kasiinos number 7",                     "points": 75, "if": [{ "flag": "casino_seven" }] },
+    { "label": "Märt ja Ain lepitatud",                 "points": 25, "if": [{ "flag": "mart_peace" }] },
+    { "label": "Võitsid kakluse",                       "points": 20, "if": [{ "flag": "won_fight" }] },
+    { "label": "Kohtasid Kermot",                       "points": 15, "if": [{ "flag": "met_kermo" }] },
+    { "label": "TORTA",                                 "points": 30, "if": [{ "flag": "truuse_arrested" }] },
+    { "label": "Video „TORTA“",                         "points": 20, "if": [{ "flag": "filmed_torta" }] },
+    { "label": "Kalle (koonus) jõudis koju",            "points": 20, "if": [{ "item": "cone" }, { "flag": "home" }] },
+    { "label": "Hea karma",                             "points": 15, "if": [{ "flag": "good_karma" }] },
+    { "label": "Sõber, kes sind sallib",                "count": "friends_like", "per": 10 },
+    { "label": "Kohatud sõber",                         "count": "friends_met", "per": 5 },
+    { "label": "Raha alles (€)",                        "count": "money", "per": 1, "if": [{ "flag": "home" }] },
+    { "label": "Akut alles (%)",                        "count": "phone", "per": 0.5, "if": [{ "flag": "home" }] },
+    { "label": "Kodus enne 04:00",                      "points": 25, "if": [{ "flag": "home" }, { "before": "04:00" }] },
+    { "label": "Kõndisid koju, takso ei näinud sind",   "points": 20, "if": [{ "flag": "home" }, { "not_flag": "took_taxi" }] },
+    { "label": "Halb karma",                            "points": -15, "if": [{ "flag": "bad_karma" }] },
+    { "label": "Kardo pidi sind päästma",               "count": "kardo_saves", "per": -10 },
+    { "label": "Sõber pidi su takso kinni maksma",      "points": -10, "if": [{ "flag": "friend_taxi" }] },
+    { "label": "Probleemiriba läks lõhki",              "points": -25, "if": [{ "flag": "meltdown" }] },
+    { "label": "Ärkasid politsei ees pingil",           "points": -50, "if": [{ "visited": "police_bench" }] },
+    { "label": "Kinni peetud",                          "points": -100, "if": [{ "ending": "detained" }] },
+    { "label": "Röövitud",                              "points": -50, "if": [{ "ending": "robbed" }] },
+    { "label": "Ukse taha jäänud",                      "points": -25, "if": [{ "ending": "locked_out" }] },
+    { "label": "Päike tõusis enne, kui koju jõudsid",   "points": -100, "if": [{ "ending": "sunrise" }] }
+  ],
+
+  // Takso hinnatabel: kasutatakse esimest rida, mille "until" on hilisem kui praegune kellaaeg.
+  "taxi": {
+    "prices": [
+      { "until": "02:00", "min": 4.4,  "max": 6.0 },
+      { "until": "03:30", "min": 6.0,  "max": 10.0 },
+      { "until": "05:00", "min": 10.0, "max": 15.0 },
+      { "until": "23:59", "min": 15.0, "max": 21.0 }
+    ],
+    "surge_chance": 0.15,
+    "surge_mult": [1.3, 1.8],
+    "wait": [5, 20],
+    "ride_minutes": 8,
+    // Raha otsas? Küsi poistelt. tõenäosus = base + per_affinity * (kui palju poisid sind kokku sallivad)
+    "friend_help": { "base": 0.15, "per_affinity": 0.07 }
+  },
+
+  // Pakutakse igas asukohas peale kodu.
+  "global_actions": [
+    { "label": "Saada Jasper koju magama (kell 7 on objekt)", "show_if": [{ "task": "sq_jasper_home" }, { "not_flag": "jasper_sent_home" }, { "friend_here": "jasper" }],
+      "do": [{ "time": 5 }, { "chance": { "var": "aff_jasper", "from": 0, "to": 5, "min": 0.4, "max": 0.95 },
+        "then": [{ "flag": "jasper_sent_home" }, { "log": "Saatsid Jasperi koju magama, sest tal oli kell 7 objekt." }, { "say": "Jasper ohkab: „Rein saatis su, eks?“ Ta kallistab sind ja kõnnib koju. Ukse pealt laulab ta veel ühe rea." }],
+        "else": [{ "say": "Jasper: „Üks laul veel.“ See on alati üks laul veel. Proovi hiljem uuesti." }] }] },
+    { "label": "Tee poistele ring välja (12 €)", "show_if": [{ "task": "sq_round" }, { "not_flag": "bought_round" }, { "present_min": 2 }],
+      "if": [{ "var": "money", ">=": 12 }], "locked": "Raha ei jätku",
+      "do": [{ "time": 5 }, { "money": -12 }, { "problem": -8 }, { "add": { "drinks": 1 } }, { "flag": "bought_round" }, { "log": "Tegid poistele ringi välja." },
+             { "say": "Sa tood ringi. Poisid vaatavad sind nagu kangelast. Kangelaseks olemine maksab täna 12 eurot." }] },
+    { "label": "Tee grupipilt kõigiga, kes siin on", "show_if": [{ "task": "group_photo3" }, { "not_flag": "group_photo3" }, { "present_min": 3 }],
+      "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+      "do": [{ "time": 5 }, { "phone": -3 }, { "flag": "group_photo3" }, { "log": "Tegid Kardo nõutud grupipildi. Kolm või rohkem inimest, null head nurka." },
+             { "say": "Kõik mahuvad pildile. Keegi ei vaata kaamerasse, kellelgi on õlu näos. Kardo kiidab heaks: „Kvaliteet.“" }] },
+    { "label": "Anna Kardole Red Bull ja pirukas", "show_if": [{ "item": "kardo_snack" }, { "friend_here": "kardo" }],
+      "do": [{ "remove_item": "kardo_snack" }, { "flag": "fed_kardo" }, { "aff": { "kardo": 3 } }, { "problem": -5 },
+             { "log": "Tõid kainele Kardole Red Bulli ja piruka. Ta ütles, et sa oled ainuke, kes kuulab." },
+             { "say": "Kardo vaatab pirukat nagu medalit. „Sa oled ainus, kes kunagi midagi päriselt toob.“ Ta sööb selle kolme suutäiega ära." }] },
+    { "label": "Otsi üles keegi poistest, kes sulle takso telliks",
+      "show_if": [{ "var": "money", "<": 6 }, { "not_at": ["kaubamaja", "police_bench"] }],
+      "if": [{ "var": "friends_met", ">=": 1 }],
+      "locked": "Sa pole täna veel ühtegi poistest näinud",
+      "do": [{ "time": [10, 20] },
+             { "chance": 0.15, "per_var": "aff_total", "per": 0.07,
+               "then": [{ "say": "{friend} ohkab, avab Bolti ja tellib sulle sõidu. „Oled mulle võlgu.“" }, { "friend_taxi": true }],
+               "else": [{ "say": "Teed täisringi. Kedagi pole. Või nad peidavad end sinu eest." }] }] }
+  ],
+
+  // Poisid liiguvad ringi ja tulevad sinu juurde ükskõik kus.
+  "roaming": {
+    "chance": 0.6,          // iga tegevuse / saabumise järel, kui ooteaeg on möödas
+    "cooldown": 12,         // mänguminutid kahe kohtumise vahel
+    "max": 14,              // öö kohta
+    "if": [{ "after": "00:05" }, { "not_at": ["home", "kaubamaja", "police_bench"] }],
+    "encounters": [
+      { "id": "r_martin_lighter", "scene": "m_lighter",  "weight": 3 },
+      { "id": "r_martin_deal",    "scene": "m_deal",     "weight": 3 },
+      { "id": "r_martin_favor",   "scene": "m_favor",    "weight": 4, "if": [{ "var": "aff_martin", ">=": 2 }] },
+      { "id": "r_jasper_deep",    "scene": "j_deep",     "weight": 3 },
+      { "id": "r_jasper_charger", "scene": "j_charger",  "weight": 4, "if": [{ "var": "phone", "<": 45 }] },
+      { "id": "r_jasper_duet",    "scene": "j_duet",     "weight": 3 },
+      { "id": "r_ain_round",      "scene": "a_round",    "weight": 4 },
+      { "id": "r_ain_arm",        "scene": "a_arm",      "weight": 3 },
+      { "id": "r_ain_seik",       "scene": "a_seik",     "weight": 2, "if": [{ "not_at": ["seik"] }] },
+      { "id": "r_tristan_dare",   "scene": "t_dare",     "weight": 3 },
+      { "id": "r_tristan_borrow", "scene": "t_borrow",   "weight": 2 },
+      { "id": "r_tristan_weston", "scene": "tristan_offer", "weight": 1, "if": [{ "not_flag": "enc_tristan" }] },
+      { "id": "r_tristan_done",   "scene": "tristan_done",  "weight": 4, "if": [{ "after": "02:30" }, { "not_flag": "sent_tristan_home" }] },
+      { "id": "r_boys_photo",     "scene": "boys_photo", "weight": 2 },
+      { "id": "r_boys_after",     "scene": "boys_afterparty", "weight": 3, "if": [{ "after": "03:30" }, { "not_at": ["annelinn"] }] },
+      // poiste lood
+      { "id": "r_jasper_ex",      "scene": "j_ex",       "weight": 2, "if": [{ "at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_martin_alibi",   "scene": "m_alibi",    "weight": 2, "if": [{ "after": "01:30" }] },
+      { "id": "r_ain_phone",      "scene": "a_phone",    "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      // võõrad ja friigid
+      { "id": "r_busker",    "scene": "s_busker",    "weight": 3, "if": [{ "at": ["ruutel", "ruutli"] }] },
+      { "id": "r_tourists",  "scene": "s_tourists",  "weight": 3, "if": [{ "at": ["ruutel", "ruutli", "raekoja"] }] },
+      { "id": "r_karma_good","scene": "s_karma_good","weight": 6, "if": [{ "flag": "good_karma" }] },
+      { "id": "r_karma_bad", "scene": "s_karma_bad", "weight": 6, "if": [{ "flag": "bad_karma" }] },
+      { "id": "r_promo",     "scene": "s_promo",     "weight": 3, "if": [{ "at": ["seik", "satiir", "genn"] }] },
+      { "id": "r_professor", "scene": "s_professor", "weight": 2, "if": [{ "at": ["genn", "satiir"] }] },
+      { "id": "r_erasmus",   "scene": "s_erasmus",   "weight": 2, "if": [{ "at": ["seik", "ruutel", "satiir"] }] },
+      { "id": "r_cat",       "scene": "s_cat",       "weight": 3, "if": [{ "at": ["ruutli", "ruutel", "emajogi", "toomemagi", "raekoja"] }] },
+      { "id": "r_wallet",    "scene": "s_wallet",    "weight": 2 },
+      { "id": "r_wallet_owner", "scene": "s_wallet_owner", "weight": 6, "if": [{ "flag": "took_wallet" }] },
+      { "id": "r_classmate", "scene": "s_classmate", "weight": 2 },
+      { "id": "r_kebab_thief", "scene": "s_kebab_thief", "weight": 5, "if": [{ "item": "kebab_takeaway" }, { "at": ["ruutli", "ruutel", "toomemagi", "raekoja", "emajogi"] }] },
+      { "id": "r_rain",      "scene": "s_rain",      "weight": 2, "if": [{ "at": ["ruutli", "ruutel", "toomemagi", "raekoja", "emajogi", "annelinn"] }] },
+      { "id": "r_keys_lost", "scene": "s_keys_lost", "weight": 3, "if": [{ "after": "01:00" }] },
+      { "id": "r_keys_found","scene": "s_keys_found","weight": 6, "if": [{ "flag": "lost_keys" }, { "at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_bakery",    "scene": "s_bakery",    "weight": 6, "if": [{ "after": "04:30" }, { "at": ["ruutli", "ruutel", "raekoja"] }] },
+      // nad helistavad ise ja küsivad, kus sa oled
+      { "id": "r_call_martin",    "scene": "in_martin",  "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_jasper",    "scene": "in_jasper",  "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_ain",       "scene": "in_ain",     "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_tristan",   "scene": "in_tristan", "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_ets",       "scene": "in_ets",     "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_kardo",     "scene": "in_kardo",   "weight": 2, "if": [{ "var": "phone", ">": 0 }] },
+      { "id": "r_call_janno",     "scene": "in_janno",   "weight": 2, "if": [{ "var": "phone", ">": 0 }, { "before": "04:30" }] },
+      // Rüütli kandi tegelased
+      { "id": "r_tk_pigeons", "scene": "tk_pigeons", "weight": 4, "if": [{ "at": ["ruutel", "ruutli"] }, { "not_flag": "truuse_arrested" }] },
+      { "id": "r_tk_horse",   "scene": "tk_horse",   "weight": 4, "if": [{ "at": ["ruutel", "ruutli"] }, { "not_flag": "truuse_arrested" }] },
+      { "id": "r_tk_river",   "scene": "tk_river",   "weight": 4, "if": [{ "at": ["ruutel", "ruutli"] }, { "not_flag": "truuse_arrested" }] },
+      { "id": "r_ets",        "scene": "ets",        "weight": 4, "once": false, "if": [{ "at": ["ruutel", "ruutli", "satiir", "seik", "genn"] }, { "var": "ets_count", "<": 2 }] },
+      { "id": "r_janno",      "scene": "janno",      "weight": 4, "if": [{ "at": ["ruutel", "ruutli", "satiir", "seik", "genn"] }, { "before": "04:30" }] },
+      { "id": "r_annu",       "scene": "annu_ask",   "weight": 4, "if": [{ "item": "cigs" }, { "at": ["ruutli", "ruutel", "seik", "satiir"] }] },
+      { "id": "r_mart_seek",  "scene": "mart_seek",  "weight": 4, "if": [{ "flag": "met_ain" }, { "at": ["ruutel", "ruutli", "seik", "satiir"] }] },
+      { "id": "r_mart_vs_ain","scene": "mart_vs_ain","weight": 6, "if": [{ "flag": "mart_seen" }, { "at": ["ruutel", "seik", "satiir"] }] },
+      // Kardo tuleb ja võtab su joogi ära, kui asi läheb käest
+      { "id": "r_kardo_save", "scene": "kardo_intervene", "weight": 10, "once": false, "if": [{ "var": "problem", ">": 75 }, { "var": "kardo_saves", "<": 2 }] },
+      // juhuslikud ülesanded
+      { "id": "r_charger",    "scene": "s_charger",  "weight": 6, "if": [{ "task": "charger_find" }, { "not_flag": "charger_returned" }, { "at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_cone_cop",   "scene": "s_cone_cop", "weight": 4, "if": [{ "item": "cone" }, { "not_at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_m_payback",  "scene": "m_payback",  "weight": 4, "once": false, "if": [{ "flag": "lent_martin" }, { "not_flag": "martin_paid" }, { "var": "payback_tries", "<": 3 }] },
+      { "id": "r_dog",        "scene": "s_dog",      "weight": 2, "if": [{ "after": "00:30" }, { "before": "04:30" }, { "not_at": ["raekoja"] }] },
+      { "id": "r_wallet_back","scene": "s_wallet_return", "weight": 6, "if": [{ "item": "found_wallet" }, { "at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_mart_seek2",   "scene": "mart_seek",   "weight": 8,  "if": [{ "task": "sq_mart_peace" }, { "not_flag": "mart_seen" }, { "not_flag": "mart_peace" }, { "not_flag": "enc_r_mart_vs_ain" }, { "not_flag": "enc_r_mart_seek" }] },
+      { "id": "r_mart_vs_ain2", "scene": "mart_vs_ain", "weight": 10, "if": [{ "task": "sq_mart_peace" }, { "flag": "mart_seen" }, { "not_flag": "enc_r_mart_vs_ain" }] },
+      // Jasperi küsimused
+      { "id": "r_j_site",    "scene": "j_site",    "weight": 3 },
+      { "id": "r_j_foreman", "scene": "j_foreman", "weight": 4, "if": [{ "after": "02:00" }, { "before": "05:00" }, { "not_flag": "jasper_sent_home" }] },
+      { "id": "r_j_level",   "scene": "j_level",   "weight": 2, "if": [{ "at": ["satiir", "seik", "genn"] }] },
+      { "id": "r_j_dream",   "scene": "j_dream",   "weight": 2, "if": [{ "after": "02:30" }, { "flag": "jasper_backstory" }] },
+      { "id": "r_j_hardhat", "scene": "j_hardhat", "weight": 2, "if": [{ "at": ["seik"] }] },
+      { "id": "r_j_q1", "scene": "j_q1", "weight": 1 }, { "id": "r_j_q2", "scene": "j_q2", "weight": 1 },
+      { "id": "r_j_q3", "scene": "j_q3", "weight": 1 }, { "id": "r_j_q4", "scene": "j_q4", "weight": 1 },
+      { "id": "r_j_q5", "scene": "j_q5", "weight": 1 }, { "id": "r_j_q6", "scene": "j_q6", "weight": 1 },
+      { "id": "r_j_q7", "scene": "j_q7", "weight": 1 }, { "id": "r_j_q8", "scene": "j_q8", "weight": 1 }
+    ]
+  },
+
+  "blackout": {
+    "time_jump": [90, 180],
+    "phone": -30,
+    "problem_after": [45, 60],          // pärast ärkamist on pea selgem (aga mitte väga)
+    "money": [-30, 0],
+    "montage": [
+      "img/blackout/flash_lamp.jpg",
+      "img/blackout/flash_stairs.jpg",
+      "img/blackout/flash_river.jpg",
+      "img/blackout/flash_kebab.jpg",
+      "img/blackout/flash_face.jpg",
+      "img/blackout/flash_taxi.jpg"
+    ],
+    "montage_count": [3, 5],
+    "spots": [
+      { "id": "toomemagi",   "weight": 3 },
+      { "id": "emajogi",     "weight": 3 },
+      { "id": "raekoja",     "weight": 2 },
+      { "id": "stairwell",   "weight": 1 },
+      { "id": "annelinn",    "weight": 1 }
+    ],
+    // Kui mälu kustub hilja, ärkad pingil ja politsei vaatab sind.
+    "late_rule": {
+      "start_after": "04:30",
+      "wake_after": "05:00",
+      "wake_at": ["05:15", "05:40"],
+      "spot": "police_bench",
+      "scene": "police"
+    }
+  },
+
+  // Telefonisõnumid. Kui telefon on sel hetkel tühi, jääb sõnum saamata.
+  "messages": [
+    { "id": "bolt", "at": "00:20", "from": "Bolt", "chance": 0.7,
+      "text": "Reede öö! Linn on rahvast täis, sõiduhinnad võivad hommiku poole tõusta." },
+    { "id": "jaan_text", "at": "00:30", "from": "Jaan", "chance": 0.7,
+      "text": "Tere! Kas sa teadsid, et uraan-235 neutroni kinnipüüdmise ristlõige on termiliste neutronite puhul umbes 585 barni? Mõtlesin, et sind huvitab. Olen üleval kuni kella kolmeni.",
+      "replies": [
+        { "label": "Ei teadnud! Räägi veel", "do": [{ "aff": { "jaan": 1 } }] },
+        { "label": "Jaan, on reede õhtu", "do": [{ "met": "jaan" }] }
+      ] },
+    { "id": "jaan_text2", "at": "01:40", "from": "Jaan", "chance": 0.45, "if": [{ "before": "03:00" }],
+      "text": "Kas sa teadsid, et sinu pöidlaküünest läheb iga sekund läbi umbes 65 miljardit Päikese neutriinot? Mõtlesin sinu peale.",
+      "replies": [{ "label": "Jaan, mida vittu", "do": [{ "aff": { "jaan": 1 } }] }, { "label": "Ilus. Räägi veel", "do": [{ "aff": { "jaan": 2 } }] }] },
+    { "id": "jaan_text3", "at": "02:35", "from": "Jaan", "chance": 0.45, "if": [{ "before": "03:00" }],
+      "text": "Väike meeldetuletus enne magamaminekut: GPS-satelliitide kellad lähevad relatiivsuse pärast iga päev 38 mikrosekundit ette. Head ööd!",
+      "replies": [{ "label": "Head ööd, Jaan", "do": [{ "aff": { "jaan": 1 } }] }] },
+    { "id": "truuse_text", "at": "01:10", "from": "Truuse", "chance": 0.7, "if": [{ "not_flag": "truuse_arrested" }],
+      "text": "kaarna ütleb et ma räägin jama. ütle talle et ma ei räägi. sa ju tead seda hobuse asja. it's literally fakt",
+      "replies": [
+        { "label": "Sa ei räägi jama", "do": [{ "aff": { "truuse": 1, "kaarna": -1 } }] },
+        { "label": "Sa räägid jama", "do": [{ "aff": { "truuse": -1, "kaarna": 1 } }] }
+      ] },
+    { "id": "kardo_photo", "at": "00:50", "from": "Kardo", "chance": 0.5, "add_task": "group_photo3",
+      "text": "teeme täna lõpuks korraliku grupipildi. vähemalt kolm inimest peal. ma olen kaine, ma vastutan kvaliteedi eest",
+      "replies": [
+        { "label": "Teeme!", "do": [{ "aff": { "kardo": 1 } }] },
+        { "label": "Kardo, sa oled nagu ema", "do": [{ "met": "kardo" }] }
+      ] },
+    { "id": "mom_milk", "at": "01:30", "from": "Ema", "chance": 0.4, "add_task": "milk_home",
+      "text": "Too homme hommikuks piima, kui koju tuled. Ära unusta. Ma tean, et sa unustad.",
+      "replies": [
+        { "label": "Toon!", "do": [] },
+        { "label": "Ema, kell on pool kaks", "do": [{ "problem": 3 }] }
+      ] },
+    { "id": "jasper_charger", "at": "00:45", "from": "Jasper", "chance": 0.6,
+      "text": "kas keegi mu laadijat on näinud. valge. natuke kõver. emotsionaalne väärtus",
+      "replies": [
+        { "label": "Ei näinud, sorri", "do": [{ "met": "jasper" }] },
+        { "label": "Hoian silmad lahti", "do": [{ "aff": { "jasper": 1 } }, { "task_add": "charger_find" }] }
+      ] },
+    { "id": "roomie", "at": "01:20", "from": "Toakaaslane", "chance": 0.6, "if": [{ "not": { "task": "kebab_home" } }],
+      "text": "kui oled HASi juures, too mulle kebab pls. maksan tagasi (ei maksa)",
+      "replies": [
+        { "label": "Toon ära", "do": [{ "task_add": "kebab_home" }, { "flag": "promised_kebab" }] },
+        { "label": "Too ise", "do": [{ "flag": "refused_roomie" }] }
+      ] },
+    { "id": "ain_text", "at": "01:50", "from": "Ain", "chance": 0.7,
+      "text": "KUS SA OLED. ostsin kogemata liiga palju jooke ja neil on vaja kodu asap",
+      "replies": [
+        { "label": "Tulen!", "do": [{ "goto_friend": "ain" }] },
+        { "label": "Tule sina siia", "do": [{ "summon_friend": { "who": "ain", "chance": 0.7 } }] },
+        { "label": "Ei jõua praegu", "do": [{ "aff": { "ain": -1 } }] }
+      ] },
+    { "id": "martin_money", "at": "02:10", "from": "Martin", "chance": 0.6,
+      "text": "chief saad 5 eurot laenata. annan homme tagasi. ausalt. seekord päriselt no cap",
+      "replies": [
+        { "label": "Saadan (5 €)", "do": [{ "money": -5 }, { "aff": { "martin": 2 } }, { "flag": "lent_martin" }, { "task_add": "martin_payback" }] },
+        { "label": "Ei saa", "do": [{ "aff": { "martin": -1 } }] }
+      ] },
+    { "id": "group_chat", "at": "02:45", "from": "Poisid (grupp)", "chance": 0.8,
+      "text": "Tristan: kes on veel väljas\nAin: MINA TRA\nJasper: mina ka. vist. idk",
+      "replies": [
+        { "label": "Mina! Rüütlil", "do": [{ "aff": { "martin": 1, "jasper": 1, "ain": 1, "tristan": 1 } }, { "summon_friend": { "who": "tristan", "chance": 0.6 } }] },
+        { "label": "Olen juba kodus (vale)", "do": [{ "aff": { "martin": -1, "jasper": -1, "ain": -1, "tristan": -1 } }, { "flag": "lied_group" }] }
+      ] },
+    { "id": "tristan_text", "at": "03:05", "from": "Tristan", "chance": 0.6,
+      "text": "BRO. kus sa oled. mul on plaan. see on sitt plaan. ma teen seda ikka",
+      "replies": [
+        { "label": "Tule siia", "do": [{ "summon_friend": { "who": "tristan", "chance": 0.8 } }] },
+        { "label": "Ei, aitäh", "do": [{ "aff": { "tristan": -1 } }] }
+      ] },
+    { "id": "roomie_where", "at": "03:30", "from": "Toakaaslane", "if": [{ "task": "kebab_home" }, { "not_item": "kebab_takeaway" }],
+      "text": "kus mu kebab on. ma ootan. ma olen näljane ja pettunud. not cool",
+      "replies": [
+        { "label": "Tulekul", "do": [] },
+        { "label": "Mis kebab?", "do": [{ "flag": "gaslit_roomie" }] }
+      ] },
+    { "id": "mom", "at": "04:10", "from": "Ema", "chance": 0.5,
+      "text": "Kas sa elus oled? Vasta mulle.",
+      "replies": [
+        { "label": "Elus. Varsti kodus.", "do": [{ "problem": -5 }] },
+        { "label": "Ema, ma olen täiskasvanu", "do": [{ "problem": 5 }] }
+      ] }
+  ]
+}

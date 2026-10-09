@@ -1,0 +1,1913 @@
+[
+  // ================================================================ ALGUS
+  {
+    "id": "intro", "speaker": "",
+    "text": [
+      "Kesköö. Kaubamaja parkla. Päike tõuseb umbes kuue paiku ja sa tead, mida päike sinuga teeb.",
+      "Tänased ülesanded on telefonis (Tab). Seal on ka poiste numbrid. Tee asjad ära ja jõua koju enne, kui taevas halliks läheb."
+    ],
+    "choices": [{ "label": "Lähme" }]
+  },
+
+  // ================================================================ RÜÜTLI TERMINAL
+  {
+    "id": "kebab_queue", "speaker": "HAS KEBAB",
+    "text": "Järjekord looklevab uksest välja. Sinu ees on umbes kakskümmend purjus inimest, üks neist nutab küüslaugukastmesse.",
+    "choices": [
+      { "label": "Oota ära",
+        "do": [{ "time": [15, 40] }, { "money": -8 }, { "problem": -25 }, { "item": "kebab" }, { "flag": "kebab_done" },
+               { "log": "Ootasid HASi järjekorras kebabi {time} minutit." },
+               { "say": "{time} minutit hiljem: kebab. Väärt. Vererõhk langeb." }] },
+      { "label": "Võta kaks (üks koju)",
+        "do": [{ "time": [20, 45] }, { "money": -16 }, { "problem": -25 }, { "item": ["kebab", "kebab_takeaway"] }, { "flag": "kebab_done" },
+               { "log": "Ootasid HASis {time} minutit ja said teise kebabi kaasa." },
+               { "say": "Üks käes, teine fooliumis jope sees. Toakaaslane on sulle võlgu." }] },
+      { "label": "Maksa kellelegi eespool, et ta sulle ka tellib",
+        "do": [{ "time": 8 }, { "money": -14 },
+               { "chance": 0.6,
+                 "then": [{ "item": ["kebab", "kebab_takeaway"] }, { "problem": -15 }, { "flag": "kebab_done" },
+                          { "log": "Maksid võõrale, et HASi järjekorrast mööda saada. Toimis." },
+                          { "say": "Sulejopes tüüp võtab raha ja tuleb päriselt kahe kebabiga tagasi. Usk inimkonda: taastatud." }],
+                 "else": [{ "problem": 15 }, { "log": "Maksid võõrale, et HASi järjekorrast mööda saada. Ta läks rahaga minema." },
+                          { "say": "Ta võtab raha, noogutab tõsiselt ja kõnnib otse tagauksest välja." }] }] },
+      { "label": "Unusta ära", "do": [{ "time": 3 }, { "say": "Elu on liiga lühike. Öö on veel lühem." }] }
+    ]
+  },
+  {
+    "id": "martin", "speaker": "MARTIN",
+    "redirect": [
+      { "if": [{ "not_item": "cigs" }], "to": "martin_nocigs" },
+      { "if": [{ "var": "problem", ">=": 75 }], "to": "martin_tense" }
+    ],
+    "text": "Martin ilmub välja eikuskilt, nagu alati. „Ooo. Kas see on värske pakk? Üks suits. Noh. Üks.“",
+    "choices": [
+      { "label": "Tõmba temaga üks suits",
+        "do": [{ "time": 10 }, { "problem": -5 }, { "aff": { "martin": 2 } }, { "flag": "smoked_with_martin" },
+               { "log": "Tõmbasid Martiniga suitsu." },
+               { "chance": 0.6,
+                 "then": [{ "flag": "shortcut" }, { "say": "Martin räägib sulle otseteest läbi hoovide Rüütlile. Säästab iga kord paar minutit." }],
+                 "else": [{ "say": "Ta räägib sulle loo ühest tuhkrust. See ei vii mitte kuhugi." }] }] },
+      { "label": "Müü talle üks 2 euro eest",
+        "do": [{ "money": 2 }, { "met": "martin" },
+               { "say": "Ta maksab müntidega. Mõned neist pole eurod. Ta jätab selle meelde ja mitte heas mõttes." }] },
+      { "label": "Ei, mitte täna",
+        "do": [{ "problem": 12 }, { "aff": { "martin": -2 } }, { "flag": "snubbed_martin" },
+               { "say": "Martin vaatab sind nagu oleksid ta ema solvanud." }] }
+    ]
+  },
+  {
+    "id": "martin_nocigs", "speaker": "MARTIN",
+    "text": "Martin ilmub välja eikuskilt, nagu alati. „Ooo. Sul suitsu on?“ Sul ei ole. Ta näeb välja nagu oleks see isiklik solvang.",
+    "choices": [
+      { "label": "Osta talle pakk (7 €)",
+        "do": [{ "time": 5 }, { "money": -7 }, { "aff": { "martin": 3 } }, { "flag": "smoked_with_martin" }, { "problem": -5 },
+               { "log": "Ostsid Martinile paki suitsu. Ta mäletab seda." },
+               { "chance": 0.6, "then": [{ "flag": "shortcut" }, { "say": "Martin on nii liigutatud, et räägib sulle oma otseteest Rüütlile. Läbi hoovide." }],
+                                "else": [{ "say": "„Sa oled päris inimene,“ ütleb Martin ja pistab paki taskusse. Kogu paki." }] }] },
+      { "label": "Mine temaga koos poodi",
+        "do": [{ "time": 10 }, { "aff": { "martin": 1 } },
+               { "say": "Ta ostab endale paki ja sulle ühe Red Bulli. Martin, kes maksab ise. Imed juhtuvad." }, { "problem": -8 }] },
+      { "label": "„Ei ole, sorri“", "do": [{ "met": "martin" }, { "say": "Martin noogutab ja kaob sama vaikselt, kui tuli." }] }
+    ]
+  },
+  {
+    "id": "martin_tense", "speaker": "MARTIN",
+    "text": "Martin tahab suitsu, aga sa oled liiga närvis ja ta seisab liiga lähedal.",
+    "choices": [
+      { "label": "Anna talle üks ja kõnni minema",
+        "do": [{ "time": 3 }, { "problem": -10 }, { "aff": { "martin": 1 } }, { "say": "Ulatad selle sõnagi lausumata. Kriis ära hoitud." }] },
+      { "label": "Ütle, et ostku ise",
+        "do": [{ "aff": { "martin": -3 } },
+               { "chance": 0.5, "then": [{ "scene": "altercation" }], "else": [{ "problem": 15 }, { "say": "Martin ütleb sulle midagi kordamiskõlbmatut ja lahkub." }] }] }
+    ]
+  },
+
+  // ================================================================ ÜLDINE JAMA
+  {
+    "id": "altercation", "speaker": "MINGI TÜÜP",
+    "text": "Dressides tüüp otsustab, et sa vaatasid teda valesti. Ta on selles väga kindel.",
+    "choices": [
+      { "label": "Vabanda", "do": [{ "time": 5 }, { "problem": -12 }, { "say": "Vabandad oma olemasolu eest. Ta võtab selle vastu." }] },
+      { "label": "Kardo astub vahele", "show_if": [{ "friend_here": "kardo" }],
+        "do": [{ "time": 3 }, { "problem": -15 }, { "aff": { "kardo": 1 } }, { "say": "Kardo astub teie vahele ja karjub: „MITTE TÄNA, TRA.“ Tüüp vaatab kainet Kardot, kaalub oma valikuid ja läheb minema. Kardo ei tõstnud häältki. Ta tõstis ainult kulmu." }] },
+      { "label": "Astu vastu",
+        "do": [{ "random": [
+          { "weight": 40, "do": [{ "problem": 12 }, { "aff": { "ain": 1, "tristan": 1 } }, { "flag": "won_fight" }, { "log": "Võitsid kakluse. Väidetavalt." },
+                                 { "say": "Üks müks ja ta on maas. Ain ja Tristan räägivad seda lugu veel aastaid." }] },
+          { "weight": 60, "do": [{ "time": 30 }, { "phone": -10 }, { "money": [-20, -5] }, { "problem": 8 },
+                                 { "log": "Kaotasid kakluse. Ja {money} € kaotasid ka." },
+                                 { "say": "Kaotad. Kõvasti. Pool tundi maas istumist ja taskud on kergemad." }] }
+        ] }] },
+      { "label": "Jookse",
+        "do": [{ "time": 5 }, { "problem": 8 },
+               { "chance": 0.75, "then": [{ "say": "Oled kiirem, kui välja näed." }],
+                                 "else": [{ "time": 15 }, { "say": "Ta saab su kätte. Peamiselt karjub. Viisteist minutit." }] }] }
+    ]
+  },
+  {
+    "id": "meltdown", "speaker": "",
+    "text": "Kõik hakkab keerlema. Muusika kaugeneb, põrand tõuseb vastu. Su probleemiriba on lõhki ja sinu käest enam midagi ei küsita.",
+    "choices": [
+      { "label": "...", "do": [{ "flag": "meltdown" }, { "log": "Probleemiriba läks lõhki. Mälu kustus." }, { "blackout": true }] }
+    ]
+  },
+
+  // ================================================================ SATIIR: JASPER JA AIN
+  {
+    "id": "ain_intro", "speaker": "JASPER JA AIN",
+    "text": [
+      "Nurgalauas röögivad Jasper ja Ain täiest kõrist Terminaatorit. Praegu käib „Romula“. Pool baari laulab kaasa, teine pool on sunnitud.",
+      "Ain märkab sind. „SINA! Tule siia!“ Ta on juba leti poole teel."
+    ],
+    "choices": [
+      { "label": "Ühine nendega", "next": "ain_round", "do": [{ "met": ["jasper", "ain"] }, { "set": { "ain_round": 0, "ain_drinks": 0 } }] },
+      { "label": "Tee näo, et sa ei näinud neid",
+        "do": [{ "aff": { "ain": -2, "jasper": -1 } }, { "say": "Peidad end samba taha. Ain nägi sind kindlasti. Ta toob selle jutuks." }] }
+    ]
+  },
+  {
+    "id": "ain_round", "speaker": "AIN",
+    "redirect": { "if": [{ "var": "ain_round", ">=": 4 }], "to": "ain_end" },
+    "text": "Ain on letist tagasi järjekordse ringiga. Ta maksab. Ta maksab alati. Keegi ei tea, kust Aini raha tuleb, ja keegi ei julge küsida. Jasper otsib telefonist järgmist Terminaatori lugu nagu kirurg skalpelli.",
+    "choices": [
+      { "label": "Joo, mis Ain tõi", "next": "ain_round",
+        "do": [{ "time": 15 }, { "problem": 18 }, { "add": { "ain_drinks": 1, "ain_round": 1, "drinks": 1 } }, { "aff": { "ain": 1 } }] },
+      { "label": "Laula kaasa", "next": "ain_round",
+        "do": [{ "time": 20 }, { "problem": -8 }, { "add": { "ain_round": 1 } }, { "aff": { "jasper": 1 } }, { "flag": "sang_with_ain" }, { "random": [
+          { "do": [{ "say": "„Juulikuu lumi“. Jasper võtab kõrge noodi nii, et kellegi klaas väriseb. Ain teeb lõpus õhukitarri soolo, mis kestab kauem kui laul ise." }] },
+          { "do": [{ "say": "„Romula“, teist korda. Ain ei tea poolt sõnadest, aga see ei takista teda. Ta laulab need, mida ta ei tea, kõige valjemini." }] },
+          { "do": [{ "say": "Terminaatori ballaad. Jasper sulgeb silmad ja laulab nagu oleks tellingutel kuueteistkümnendal korrusel. Ain nutab. Ain ütleb, et see on õlu." }] },
+          { "do": [{ "say": "Ain nõuab „Juulikuu lund“ uuesti. Baarman ütleb, et seda on täna juba neli korda lauldud. Ain: „Mida vittu, see on hitt.“ Lauldakse viiendat korda." }] }
+        ] }] },
+      { "label": "Keeldu joogist", "next": "ain_round",
+        "do": [{ "problem": 6 }, { "add": { "ain_round": 1 } }, { "aff": { "ain": -1 } }] },
+      { "label": "Proovi vaikselt minema lipsata",
+        "do": [{ "chance": 0.7, "per_var": "ain_drinks", "per": -0.1,
+                 "then": [{ "aff": { "ain": -1, "jasper": -1 } }, { "log": "Laulsid Satiiris Jasperi ja Ainiga, kuni õnnestus põgeneda." },
+                          { "say": "Lipsad keset refrääni minema. Keegi ei märka. Ilmselt." }],
+                 "else": [{ "time": 5 }, { "say": "Ain istutab su füüsiliselt tagasi toolile." }, { "scene": "ain_round" }] }] }
+    ]
+  },
+  {
+    "id": "ain_end", "speaker": "JASPER JA AIN",
+    "text": "Jasperil said Terminaatori laulud otsa. Kõik. Isegi B-poolsed. Ainil raha otsa ei saanud, Ainil ei saa kunagi raha otsa. Sa pöörad pea korraks ära ja kui tagasi vaatad, on Aini tool tühi. Ainult tool on veel soe. Jasper kehitab õlgu: „Ta teeb seda.“",
+    "choices": [
+      { "label": "Komberda tagasi leti juurde",
+        "do": [{ "time": 5 }, { "aff": { "ain": 1, "jasper": 1 } }, { "flag": "ain_full_set" },
+               { "log": "Elasid Satiiris Jasperi ja Ainiga terve kava üle." }] }
+    ]
+  },
+
+  // ================================================================ SEIK: TÜDRUK
+  {
+    "id": "girl", "speaker": "???",
+    "text": "Ta on väga ilus ja tal on sinu vastu väga suur huvi. See peaks olema sinu esimene hoiatus.",
+    "choices": [
+      { "label": "Küsi numbrit ja jäta sinnapaika",
+        "do": [{ "time": 10 },
+               { "chance": { "var": "problem", "from": 0, "to": 100, "min": 0.7, "max": 0.1 },
+                 "then": [{ "flag": "got_number" }, { "log": "Said Seigast numbri. Päris oma, väidetavalt." },
+                          { "say": "Ta trükib numbri ise sisse. Siis on ta läinud. Katsud taskuid. Kõik on alles." }],
+                 "else": [{ "say": "Ta naerab, võtab su telefoni „numbrit sisestama“ ja annab tagasi selfiega oma keskmisest sõrmest." },
+                          { "chance": 0.4, "then": [{ "money": [-30, -10] }, { "say": "Ka osa sularahast on kadunud. Klassika." }] }] }] },
+      { "label": "Ole rahulik",
+        "do": [{ "chance": { "var": "problem", "from": 0, "to": 100, "min": 0.85, "max": 0.2 },
+                 "then": [{ "say": "Hoiad end külma närviga. Ta kaotab huvi ja triivib minema." }],
+                 "else": [{ "random": [
+                   { "weight": 50, "do": [{ "set": { "money": 0 } }, { "log": "Kohtusid Seigas ühe ilusa tüdrukuga. Rahakott kadus." },
+                                          { "say": "Kümne minuti pärast on ta läinud. Su rahakott ka." }] },
+                   { "weight": 50, "do": [{ "say": "Ta triivib minema. Su asjad on alles. Seekord." }] }
+                 ] }] }] },
+      { "label": "Mine sellega kaasa",
+        "do": [{ "random": [
+          { "weight": 35, "do": [{ "set": { "money": 0 } }, { "log": "Kohtusid Seigas ühe ilusa tüdrukuga. Rahakott kadus." },
+                                 { "say": "Kümne minuti pärast on ta läinud. Su rahakott ka." }] },
+          { "weight": 25, "do": [{ "set": { "money": 0 } }, { "log": "Läksid Seigast ühe ilusa tüdrukuga koju. Ta röövis su paljaks." }, { "end": "robbed" }] },
+          { "weight": 40, "do": [{ "aff": { "ain": -2, "jasper": -1, "martin": -1, "tristan": -1 } }, { "flag": "went_home_with_girl" },
+                                 { "log": "Lahkusid Seigast ühe tüdrukuga. Poisid jäid. Poistel oli elu parim öö." }, { "goto": "home" }] }
+        ] }] }
+    ]
+  },
+
+  // ================================================================ TRISTAN
+  {
+    "id": "tristan_offer", "speaker": "TRISTAN",
+    "redirect": { "if": [{ "var": "problem", ">": 70 }], "to": "tristan_forced" },
+    "text": "Tristan tuleb rahva seest, käes viis Westonit. Ta irvitab. „Bro. Need on meile. Peamiselt sulle. No cap.“",
+    "choices": [
+      { "label": "Joo Westonid ära",
+        "do": [{ "aff": { "tristan": 2 } }, { "add": { "drinks": 5 } }, { "flag": "enc_tristan" },
+               { "log": "Tristan tuli viie Westoniga. Jõid need ära." }, { "blackout": true }] },
+      { "label": "Joo üks, anna neli tagasi",
+        "do": [{ "time": 5 }, { "problem": 15 }, { "add": { "drinks": 1 } }, { "aff": { "tristan": 1 } }, { "flag": "enc_tristan" },
+               { "say": "Tristan austab kompromissi. Ta joob ülejäänud neli selle ajaga, mis sul ühe lõpetamiseks kulub." }] },
+      { "label": "Kardo karjub Tristani peale", "show_if": [{ "friend_here": "kardo" }],
+        "do": [{ "time": 3 }, { "aff": { "kardo": 1, "tristan": -1 } }, { "flag": "enc_tristan" }, { "problem": -5 },
+               { "say": "Kardo: „TRISTAN. EI.“ Tristan paneb Westonid lauale ja astub sammu tagasi nagu oleks laud kuum. Kardo korjab need kokku ja viib leti taha." }] },
+      { "label": "Ütle Tristanile ei",
+        "do": [{ "time": 5 }, { "aff": { "tristan": -2 } }, { "met": "tristan" }, { "flag": "enc_tristan" },
+               { "say": "Tristan näeb hetkeks haavunud välja. Siis joob ta kõik viis ise ära." }] }
+    ]
+  },
+  {
+    "id": "tristan_done", "speaker": "TRISTAN",
+    "text": "Tristan nõjatub seinale 45-kraadise nurga all. Ta on läbi. Ta proovib su nime öelda ja saab kaks tähte välja.",
+    "choices": [
+      { "label": "Telli talle takso ja saada koju", "if": [{ "var": "phone", ">": 0 }], "locked": "Su telefon on tühi",
+        "do": [{ "time": 10 }, { "phone": -5 }, { "aff": { "tristan": 3 } }, { "flag": "sent_tristan_home" },
+               { "log": "Saatsid Tristani taksoga koju. Öö heategu." },
+               { "say": "Valad Tristani Bolti ja vaatad juhile otsa pilguga, mis ütleb „palun“." }] },
+      { "label": "Saada ta ise taksopeatusse",
+        "do": [{ "time": 25 }, { "problem": -5 }, { "aff": { "tristan": 4 } }, { "flag": "sent_tristan_home" },
+               { "log": "Talutasid Tristani taksoni, hoides teda kogu tee püsti." },
+               { "say": "Kakskümmend viis minutit tema püsti hoidmist. Ta ütleb üksteist korda, et oled ta parim sõber." }] },
+      { "label": "Jäta ta rahule",
+        "do": [{ "aff": { "tristan": -2 } }, { "met": "tristan" },
+               { "say": "Küll tal läheb hästi. Ilmselt. Homme saad grupivestlusest teada." }] }
+    ]
+  },
+  {
+    "id": "t_dare", "speaker": "TRISTAN",
+    "text": "Tristan, silmad liiga suured: „Ma julgen kihla vedada, et sa ei roni bussipeatuse katusele ja ei tee Kalevipoja poosi.“",
+    "choices": [
+      { "label": "Tee ära",
+        "do": [{ "met": "tristan" }, { "random": [
+          { "weight": 55, "do": [{ "time": 5 }, { "problem": 10 }, { "aff": { "tristan": 2 } }, { "log": "Tegid bussipeatuse katusel Kalevipoja poosi. Tristan filmis." },
+                                 { "say": "Legendaarne. Väike rahvahulk plaksutab. Tristan nutab naerda." }] },
+          { "weight": 45, "do": [{ "time": 20 }, { "problem": 15 }, { "phone": -8 }, { "aff": { "tristan": 1 } },
+                                 { "log": "Kukkusid bussipeatuse katuselt. Telefon jäi ellu. Napilt." },
+                                 { "say": "Libised. Telefon lendab asfaldile. Turva seletab sulle kakskümmend minutit asju." }] }
+        ] }] },
+      { "label": "Pane tema seda tegema",
+        "do": [{ "time": 5 }, { "met": "tristan" },
+               { "chance": 0.5, "then": [{ "aff": { "tristan": 1 } }, { "problem": -5 }, { "say": "Ta teeb seda kohe. Null kõhklust. Sa filmid. See on mõjuvõim." }],
+                                "else": [{ "aff": { "tristan": -1 } }, { "say": "„Argpüks,“ ütleb ta ja läheb kedagi julgemat otsima." }] }] },
+      { "label": "Ei", "do": [{ "aff": { "tristan": -1 } }, { "say": "Tristan vahib sind ebamugavalt kaua vaikides." }] }
+    ]
+  },
+  {
+    "id": "t_borrow", "speaker": "TRISTAN",
+    "text": "„Kuule, chief. Laena mulle 10 eurot. Takso jaoks. Kindlasti takso jaoks. Literally takso.“ See ei lähe takso peale.",
+    "choices": [
+      { "label": "Laena talle 10 €", "do": [{ "money": -10 }, { "aff": { "tristan": 2 } }, { "flag": "lent_tristan" },
+                                         { "say": "Ta kallistab sind ja kõnnib otsejoones leti poole." }] },
+      { "label": "Osta talle hoopis kebab", "do": [{ "money": -8 }, { "time": 10 }, { "aff": { "tristan": 1 } }, { "problem": -5 },
+                                               { "say": "Ta on täpselt neli sekundit solvunud ja sööb siis nagu hunt." }] },
+      { "label": "Sa pole pank", "do": [{ "aff": { "tristan": -1 } }, { "met": "tristan" }, { "say": "„Vau. Okei. Märgin üles.“" }] }
+    ]
+  },
+  {
+    "id": "meet_tristan", "speaker": "TRISTAN",
+    "text": "Tristan vaatab sind liiga suurte silmadega ja patsutab sulle õlale veidi liiga kõvasti.",
+    "choices": [
+      { "label": "Hängi temaga", "do": [{ "time": 15 }, { "problem": 10 }, { "aff": { "tristan": 2 } }, { "say": "Viisteist minutit kaost. Sa naersid, ta naeris, keegi ei tea miks." }] },
+      { "label": "Proovi ta maha rahustada", "do": [{ "time": 10 }, { "problem": -5 }, { "aff": { "tristan": 1 } }, { "say": "Joote vett. Tristan ütleb, et see on parim vesi, mida ta kunagi joonud on." }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "tristan" }] }
+    ]
+  },
+
+  // ================================================================ MARTIN
+  {
+    "id": "m_lighter", "speaker": "MARTIN",
+    "text": "Martin patsutab kõiki oma taskuid: „Sa mu tulemasinat oled näinud? Ja võtmeid. Ja ma vist kaotasin mingi hetk kinga ka, aga leidsin üles.“",
+    "choices": [
+      { "label": "Aita tal otsida",
+        "do": [{ "time": 15 },
+               { "chance": 0.5,
+                 "then": [{ "aff": { "martin": 3 } }, { "log": "Leidsid Martini võtmed. Ta ütleb, et on sulle võlgu." }, { "say": "Võtmed olid kogu aeg ta kapuutsis. Ta vannub, et on sulle võlgu." }],
+                 "else": [{ "aff": { "martin": 1 } }, { "say": "Viisteist minutit otsimist. Mitte midagi. Pingutust ta siiski hindab." }] }] },
+      { "label": "Anna oma suitsud, et ta maha rahuneks", "if": [{ "item": "cigs" }], "locked": "Sul pole suitsu",
+        "do": [{ "remove_item": "cigs" }, { "aff": { "martin": 2 } }, { "say": "Ta võtab terve paki. Probleem lahendatud, tema poolt vaadates." }] },
+      { "label": "Pole minu mure", "do": [{ "aff": { "martin": -1 } }, { "met": "martin" }, { "problem": 5 }, { "say": "„Külm,“ ütleb Martin." }] }
+    ]
+  },
+  {
+    "id": "m_deal", "speaker": "MARTIN",
+    "text": "Martin kummardub lähemale. „Mul on akupank. Fully charged. 10 eurot. Sõbrahind.“ See on kaetud 2019. aasta festivali kleepsudega.",
+    "choices": [
+      { "label": "Osta ära (10 €)",
+        "do": [{ "money": -10 }, { "aff": { "martin": 1 } },
+               { "random": [
+                 { "weight": 65, "do": [{ "phone": 35 }, { "say": "See päriselt töötab. Martin näeb rohkem üllatunud välja kui sina." }] },
+                 { "weight": 35, "do": [{ "phone": 4 }, { "say": "Seal on 4%. „Hommikul oli täis,“ ütleb Martin." }] }
+               ] }] },
+      { "label": "Kauple hind alla",
+        "do": [{ "time": 10 },
+               { "chance": 0.5, "then": [{ "money": -5 }, { "phone": 30 }, { "say": "5 eurot. Ta kutsub sind haiks. Ta austab seda." }, { "aff": { "martin": 1 } }],
+                                "else": [{ "aff": { "martin": -1 }, "met": "martin" }, { "say": "„Siis ei saa diili.“ Ta kõnnib minema, turu peale solvunud." }] }] },
+      { "label": "Küsi temalt hoopis teed", "do": [{ "flag": "shortcut" }, { "met": "martin" }, { "time": 3 },
+                                                 { "say": "Ta räägib sulle hooviotsetee Rüütlile. Tasuta. Teejuhatus on ainus asi, mille eest Martin kunagi raha ei küsi." }] }
+    ]
+  },
+  {
+    "id": "m_favor", "speaker": "MARTIN",
+    "text": "Martin, ebatavaliselt siiralt: „Sa oled täna minu vastu korralik olnud. Kui hiljem jänni jääd, helista mulle.“",
+    "choices": [
+      { "label": "Osta talle kinnituseks õlu", "do": [{ "money": -4 }, { "problem": 8 }, { "add": { "drinks": 1 } }, { "aff": { "martin": 2 } },
+                                                     { "log": "Martin lubas, et tal on su selg. Ostsid tõestuseks õlle." }] },
+      { "label": "Rusikakoputus", "do": [{ "aff": { "martin": 1 } }, { "say": "Korralik rusikakoputus. Leping on allkirjastatud." }] }
+    ]
+  },
+  {
+    "id": "meet_martin", "speaker": "MARTIN",
+    "text": "Martin on seal, nagu alati, käes suits, mida ta pole ise ostnud.",
+    "choices": [
+      { "label": "Räägi temaga natuke", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "martin": 1 } }, { "say": "Räägite mitte millestki. Kuidagi aitab." }] },
+      { "label": "Küsi, kas tal on mingeid nippe", "do": [{ "time": 5 }, { "met": "martin" },
+        { "chance": 0.5, "then": [{ "flag": "shortcut" }, { "say": "Ta räägib sulle hooviotsetee Rüütlile." }],
+                         "else": [{ "say": "Ta räägib jälle tuhkrust. Sama lugu. Sama lõpp, mida pole." }] }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "martin" }] }
+    ]
+  },
+
+  // ================================================================ JASPER
+  {
+    "id": "j_deep", "speaker": "JASPER",
+    "text": "Jasper ajab su nurka. „Tõsine küsimus. Kas Tartu on päris linn või lihtsalt väga suur ühiselamu?“",
+    "choices": [
+      { "label": "Kuula ta ära", "do": [{ "time": 20 }, { "problem": -15 }, { "aff": { "jasper": 2 } },
+                                        { "say": "Kahekümne minuti pärast olete lahendanud Tartu, Eesti ja suurema osa Euroopast. Imelikult rahulik on." }] },
+      { "label": "Vaidle vastu", "do": [{ "time": 10 }, { "problem": 8 }, { "aff": { "jasper": 1 } },
+                                        { "say": "Läheb tuliseks. Jasper on vaimustuses. Keegi ei võida." }] },
+      { "label": "Tee näo, et keegi helistab", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -2 }, { "aff": { "jasper": -1 } }, { "met": "jasper" }, { "say": "„Sorri, ema helistab.“ Jasper näeb, et su ekraanil on kaamera." }] }
+    ]
+  },
+  {
+    "id": "j_charger", "speaker": "JASPER",
+    "text": "Jasper vehib juhtmega. „Leidsin riidepuu tagant pistikupesa. Keegi ei tea sellest. Tuled?“",
+    "choices": [
+      { "label": "Lae temaga koos", "do": [{ "time": 20 }, { "phone": 30 }, { "aff": { "jasper": 1 } },
+                                           { "say": "Kakskümmend minutit Jasperiga mantlite taga peitu. Imelikul kombel üks öö paremaid hetki." }] },
+      { "label": "Kiire laadimine ja edasi", "do": [{ "time": 8 }, { "phone": 12 }, { "met": "jasper" }] },
+      { "label": "Pole aega", "do": [{ "met": "jasper" }, { "say": "Jasper kehitab õlgu ja valvab pistikupesa üksi." }] }
+    ]
+  },
+  {
+    "id": "j_duet", "speaker": "JASPER",
+    "text": "Jasper haarab su käest. „Duett. Kohe praegu. „Ta lendab mesipuu poole“. Ära mõtle, laula.“",
+    "choices": [
+      { "label": "Laula", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "jasper": 2 } }, { "flag": "sang_with_jasper" },
+                                { "random": [
+                                  { "weight": 50, "do": [{ "add": { "drinks": 1 } }, { "problem": 8 }, { "say": "Keegi on nii liigutatud, et ostab teile mõlemale joogi." }] },
+                                  { "weight": 50, "do": [{ "problem": 6 }, { "say": "Baarman palub lõpetada. Te ei lõpeta." }] }
+                                ] }, { "log": "Laulsid Jasperiga avalikult duetti." }] },
+      { "label": "Ümise solidaarsusest vaikselt kaasa", "do": [{ "time": 5 }, { "aff": { "jasper": 1 } }, { "say": "Ta võtab selle vastu. Napilt." }] },
+      { "label": "Mitte mingil juhul", "do": [{ "aff": { "jasper": -2 } }, { "met": "jasper" }, { "say": "Jasper laulab selle üksi, vahtides sind kogu aeg." }] }
+    ]
+  },
+  {
+    "id": "meet_jasper", "speaker": "JASPER",
+    "text": "Jasper ümiseb midagi ja kallistab sind poolikult, nagu oleks ta kogu aeg teadnud, et sa tuled. Ta on otse objektilt tulnud: tööpüksid, tsemenditolm juustes, pealkiri „ehitaja, kes laulab“ ja mitte vastupidi.",
+    "choices": [
+      { "label": "Laula temaga", "do": [{ "time": 10 }, { "problem": -10 }, { "aff": { "jasper": 1 } }, { "flag": "sang_with_jasper" }, { "say": "Üks salm. Kaks salmi. Pool baari laulab kaasa." }] },
+      { "label": "Laena ta laadijat", "do": [{ "time": 15 }, { "phone": 20 }, { "met": "jasper" }, { "say": "Tal on alati laadija. See on Jasperi supervõime." }] },
+      { "label": "„Kuidas elu on?“", "do": [{ "time": 5 }, { "problem": -6 }, { "aff": { "jasper": 1 } }, { "random": [
+        { "do": [{ "say": "Jasper vaatab kaugusesse: „Tead, see elu on selline. Üks hetk mängid padelit ja jood matchat, next step saad kuskil põõsas mingilt mehelt toorelt rongi.“ Ta võtab lonksu. Keegi ei küsi järgmist küsimust." }] },
+        { "do": [{ "say": "Jasper: „Elu on lihtne. Situn, nikun, keevitan.“ Ta ütleb seda nagu vana talupoeg tarkust. Paus. „Peamiselt keevitan.“" }] },
+        { "do": [{ "say": "Jasper: „Hommikul betoon, õhtul Terminaator. Vahepeal natuke elu. Lowkey ideaalne.“" }] }
+      ] }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "jasper" }] }
+    ]
+  },
+
+  // ================================================================ AIN
+  {
+    "id": "a_round", "speaker": "AIN",
+    "text": "Ain ilmub kahe joogiga. Üks neist on sinu oma, tahad sa või mitte.",
+    "choices": [
+      { "label": "Kuugi ära", "do": [{ "time": 5 }, { "problem": 18 }, { "add": { "drinks": 1 } }, { "aff": { "ain": 2 } }, { "say": "„SEE ON MU MEES.“" }] },
+      { "label": "Vala see salaja lillepotti",
+        "do": [{ "met": "ain" },
+               { "chance": 0.5, "then": [{ "say": "Lillel on olnud hullem öö kui sul. Ain ei kahtlusta midagi." }],
+                                "else": [{ "aff": { "ain": -3 } }, { "problem": 10 }, { "say": "Ta nägi. Ta nägi kõike. Ta näeb päriselt reedetud välja." }] }] },
+      { "label": "Anna tagasi", "do": [{ "aff": { "ain": -1 } }, { "met": "ain" }, { "say": "Ta joob mõlemad. „Rohkem mulle siis.“" }] }
+    ]
+  },
+  {
+    "id": "a_arm", "speaker": "AIN",
+    "text": "Ain lööb küünarnuki lähimale pinnale. „Kätemaadlus. Kaotaja ostab järgmise ringi.“",
+    "choices": [
+      { "label": "Mängus",
+        "do": [{ "time": 5 }, { "random": [
+          { "weight": 35, "do": [{ "aff": { "ain": 2 } }, { "problem": 12 }, { "add": { "drinks": 1 } }, { "log": "Võitsid Aini kätemaadluses. Ta ostis ringi, vihasena." },
+                                 { "say": "Sa võidad. Keegi pole rohkem šokis kui Ain. Ta ostab ringi, pomisedes." }] },
+          { "weight": 65, "do": [{ "money": -8 }, { "aff": { "ain": 1 } }, { "problem": 12 }, { "add": { "drinks": 1 } },
+                                 { "say": "Ta võidab umbes poole sekundiga. Sina ostad ringi." }] }
+        ] }] },
+      { "label": "Lase tal võita ja osta ring ikkagi",
+        "do": [{ "add": { "drinks": 1 } }, { "time": 5 }, { "money": -8 }, { "aff": { "ain": 2 } }, { "say": "Ta teab, et lasid tal võita. Ta armastab sind selle eest." }] },
+      { "label": "Keeldu", "do": [{ "aff": { "ain": -1 } }, { "met": "ain" }, { "problem": 5 }, { "say": "„Pehme,“ ütleb Ain ja torkab sind näpuga rindu." }] }
+    ]
+  },
+  {
+    "id": "a_seik", "speaker": "AIN",
+    "text": "Ain, juba minekul: „Läheme Seika. Kohe. Kõik. Sina ka.“",
+    "choices": [
+      { "label": "Mine temaga kaasa", "do": [{ "time": [5, 12] }, { "aff": { "ain": 2 } }, { "goto": "seik" }] },
+      { "label": "Tulen hiljem järele", "do": [{ "aff": { "ain": -1 } }, { "met": "ain" }, { "say": "„Ei tule,“ ütleb ta, ja tal on õigus." }] }
+    ]
+  },
+  {
+    "id": "meet_ain", "speaker": "AIN",
+    "text": "Ain: „LÕPUKS!“ Tal on kaks jooki käes ja sa juba tead, kelle oma teine on.",
+    "choices": [
+      { "label": "Joo temaga", "do": [{ "time": 5 }, { "problem": 18 }, { "add": { "drinks": 1 } }, { "aff": { "ain": 1 } }, { "say": "Terviseks. Ain on õnnelik. Su maks mitte nii väga." }] },
+      { "label": "Ütle, et oled täna rahulik", "do": [{ "aff": { "ain": -1 } }, { "problem": -5 }, { "met": "ain" }, { "say": "„Rahulik,“ kordab Ain, nagu oleks see võõrsõna." }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "ain" }] }
+    ]
+  },
+
+  // ================================================================ POISID KOOS
+  {
+    "id": "boys_photo", "speaker": "POISID",
+    "text": "Kõik neli, äkki, korraga. „GRUPIPILT.“ Tristan hoiab telefoni tagurpidi.",
+    "choices": [
+      { "label": "Mine pildile", "if": [{ "var": "phone", ">": 0 }], "locked": "Su telefon on tühi",
+        "do": [{ "time": 5 }, { "phone": -4 }, { "aff": { "martin": 1, "jasper": 1, "ain": 1, "tristan": 1 } },
+               { "log": "Grupipilt poistega. Kõigil on silmad kinni, peale Tristani, kelle silmad on liiga lahti." }] },
+      { "label": "Tee neile pilt", "do": [{ "time": 5 }, { "aff": { "jasper": 1 } }, { "met": ["martin", "ain", "tristan"] },
+                                          { "say": "Teed 40 pilti. Kõik on udused. Nad armastavad neid." }] },
+      { "label": "Lipsa minema", "do": [{ "aff": { "martin": -1, "jasper": -1, "ain": -1, "tristan": -1 } },
+                                        { "say": "Sind pole grupipildil. Kahekümne aasta pärast pole sind ka selles loos." }] }
+    ]
+  },
+  {
+    "id": "boys_afterparty", "speaker": "POISID",
+    "text": "„Järelpidu. Annelinn. Kellegi nõbu korter.“ Annelinn on kodust väga kaugel ja taevas ei lähe enam pimedamaks.",
+    "choices": [
+      { "label": "Mine järelpeole",
+        "do": [{ "time": 25 }, { "problem": 15 }, { "add": { "drinks": 1 } }, { "aff": { "martin": 2, "jasper": 2, "ain": 2, "tristan": 2 } },
+               { "log": "Läksid poistega Annelinna järelpeole." }, { "goto": "annelinn" }] },
+      { "label": "Mine hoopis koju", "do": [{ "aff": { "martin": -1, "jasper": -1, "ain": -1, "tristan": -1 } },
+                                            { "say": "„Igav,“ ütlevad nad kooris. Nad lähevad sinuta." }] }
+    ]
+  },
+
+  // ================================================================ TELEFON: SINA HELISTAD
+  {
+    "id": "call_martin", "speaker": "MARTIN (TELEFON)",
+    "text": "Kutsub... Martin vastab teisel kutsel: „Jou. Whats up?“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "martin" }], "next": "call_martin_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": "martin" }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "martin" }, { "say": "Martin: „...Okei? Imelik.“ Ta paneb toru ära." }] }
+    ]
+  },
+  {
+    "id": "call_martin_2", "speaker": "MARTIN (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "martin" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": "martin" }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "call_jasper", "speaker": "JASPER (TELEFON)",
+    "text": "Kutsub... Jasper vastab ja taustal laulab keegi. Võib-olla tema ise. „Halloo?“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "jasper" }], "next": "call_jasper_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": "jasper" }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "jasper" }, { "say": "Jasper: „Okei. Ilus hääl sul muidu.“ Klõps." }] }
+    ]
+  },
+  {
+    "id": "call_jasper_2", "speaker": "JASPER (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "jasper" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": "jasper" }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "call_ain", "speaker": "AIN (TELEFON)",
+    "text": "Kutsub... Ain vastab enne, kui esimene kutse lõpeb. „JAAA? KES SEE ON? AA, SINA!“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "ain" }], "next": "call_ain_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "ain", "chance": 0.5 } }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "aff": { "ain": -1 } }, { "say": "Ain: „MIDA VITTU? MIKS SA SIIS HELISTASID?“ Hea küsimus." }] }
+    ]
+  },
+  {
+    "id": "call_ain_2", "speaker": "AIN (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "ain" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "ain", "chance": 0.5 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "call_tristan", "speaker": "TRISTAN (TELEFON)",
+    "text": "Kutsub... kutsub... Tristan vastab hingeldades, nagu oleks ta just kuskilt üle roninud. „Mees. Putsi. Mees.“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "tristan" }], "next": "call_tristan_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "tristan", "chance": 0.25 } }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "tristan" }, { "say": "Tristan: „Okei, tra.“ Ja ta paneb toru ära." }] }
+    ]
+  },
+  {
+    "id": "call_tristan_2", "speaker": "TRISTAN (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "tristan" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "tristan", "chance": 0.25 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+
+  // ================================================================ TELEFON: NEMAD HELISTAVAD
+  {
+    "id": "in_martin", "speaker": "MARTIN HELISTAB",
+    "text": "Telefon vibreerib. Martin: „Kus sa oled? Tulen su juurde.“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "martin": 1 } }, { "summon_friend": { "who": "martin", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "martin" }] },
+      { "label": "Ära vasta", "do": [{ "aff": { "martin": -1 } }, { "say": "Lased helisema. Ta saadab kolm küsimärki." }] }
+    ]
+  },
+  {
+    "id": "in_jasper", "speaker": "JASPER HELISTAB",
+    "text": "Telefon vibreerib. Jasper: „Kus sa oled? Mul on sulle üks mõte. Tulen sinna.“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "jasper": 1 } }, { "summon_friend": { "who": "jasper", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "jasper" }] },
+      { "label": "Ära vasta", "do": [{ "aff": { "jasper": -1 } }, { "say": "Lased helisema. Ta saadab häälsõnumi. See on laul." }] }
+    ]
+  },
+  {
+    "id": "in_ain", "speaker": "AIN HELISTAB",
+    "text": "Telefon vibreerib. Ain, liiga valjult: „KUS SA OLED. MA TULEN. ÄRA LIIGU.“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "ain": 1 } }, { "summon_friend": { "who": "ain", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "ain" }] },
+      { "label": "Ära vasta", "do": [{ "aff": { "ain": -2 } }, { "say": "Lased helisema. Ta helistab veel neli korda." }] }
+    ]
+  },
+  {
+    "id": "in_tristan", "speaker": "TRISTAN HELISTAB",
+    "text": "Telefon vibreerib. Tristan: „Bro. Kus sa oled. Mul on idee. See on sitt idee. Tulen.“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "tristan": 1 } }, { "summon_friend": { "who": "tristan", "chance": 0.8 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "tristan" }] },
+      { "label": "Ära vasta", "do": [{ "aff": { "tristan": -1 } }, { "say": "Lased helisema. Ta saadab video. Sa ei vaata seda. Hea otsus." }] }
+    ]
+  },
+
+  // ================================================================ MÄLU KUSTUS: POLITSEI PINGIL
+  {
+    "id": "police", "speaker": "POLITSEI",
+    "text": "Sinised tuled. Su pingi kohal seisab kaks politseinikku. Taevas on juba hall. „Tere hommikust. Dokumendid, palun. Kuhu me läheme?“",
+    "choices": [
+      { "label": "Tee koostööd",
+        "do": [{ "time": 20 }, { "problem": -15 },
+               { "random": [
+                 { "weight": 50, "do": [{ "money": -20 }, { "log": "Said pingil magamise eest 20 € trahvi." }, { "say": "Kakskümmend eurot trahvi. Nad näitavad sulle kodu suuna kätte." }] },
+                 { "weight": 50, "do": [{ "say": "Nad lasevad sul hoiatusega minna. Ja pika pilguga." }] }
+               ] }] },
+      { "label": "Vaidle",
+        "do": [{ "chance": { "var": "problem", "from": 40, "to": 100, "min": 0.1, "max": 0.95 },
+                 "then": [{ "log": "Vaidlesid politseiga. Kaotasid." }, { "end": "detained" }],
+                 "else": [{ "time": 15 }, { "say": "Kuidagi võidad sa vaidluse. Nad näevad väsinud välja." }] }] },
+      { "label": "Jookse",
+        "do": [{ "chance": 0.5,
+                 "then": [{ "time": 3 }, { "problem": 10 }, { "log": "Jooksid koidikul politseil eest." }, { "say": "Oled läinud enne, kui nad lause lõpetavad." }],
+                 "else": [{ "log": "Proovisid politseil eest joosta. Ei õnnestunud." }, { "end": "detained" }] }] }
+    ]
+  },
+  // ================================================================ TRISTAN, KUI OLED LIIGA KAUGEL (valikut pole)
+  {
+    "id": "tristan_forced", "speaker": "TRISTAN",
+    "text": "Tristan surub sulle Westoni pihku. Siis teise. Sa oled liiga kaugel, et ei öelda. Su käsi liigub iseenesest.",
+    "choices": [
+      { "label": "Joo", "do": [{ "aff": { "tristan": 2 } }, { "add": { "drinks": 5 } }, { "flag": "enc_tristan" },
+                               { "log": "Tristan tuli viie Westoniga. Sul polnud valikut." }, { "blackout": true }] }
+    ]
+  },
+
+  // ================================================================ POISTE LOOD
+  {
+    "id": "j_ex", "speaker": "JASPER",
+    "text": "Jasper haarab su käsivarrest. „Mu eks on siin. Ära vaata! Ok, vaata. Palun tee nägu, nagu oleksime väga lõbusad.“",
+    "choices": [
+      { "label": "Mängi kaasa, naera valjult tema naljade üle",
+        "do": [{ "time": 15 }, { "problem": 5 }, { "aff": { "jasper": 2 } },
+               { "chance": 0.5, "then": [{ "say": "Eks tuleb ise juurde ja ütleb Jasperile, et ta näeb hea välja. Jasper on kolm päeva õnnelik." }, { "aff": { "jasper": 1 } }],
+                                "else": [{ "say": "Naerad liiga valjult. Kõik vaatavad. Eks ka. Jasper sureb vaikselt sinu kõrval." }] }] },
+      { "label": "Mine räägi eksiga ise",
+        "do": [{ "time": 10 }, { "met": "jasper" },
+               { "random": [
+                 { "weight": 50, "do": [{ "aff": { "jasper": -2 } }, { "say": "Sa ütled midagi valesti. Jasperi eks lahkub. Jasper ei räägi sinuga kümme minutit." }] },
+                 { "weight": 50, "do": [{ "aff": { "jasper": 3 } }, { "log": "Lepitasid Jasperi ja tema eksi. Kuidagi." }, { "say": "Kümme minutit hiljem räägivad nad omavahel jälle. Jasper vaatab sind nagu pühakut." }] }
+               ] }] },
+      { "label": "„Mees, lase lahti“", "do": [{ "aff": { "jasper": -1 } }, { "problem": -5 }, { "say": "Jasper ohkab sügavalt. „Sul on õigus. Sul on alati õigus. See on tüütu.“" }] }
+    ]
+  },
+  {
+    "id": "m_alibi", "speaker": "MARTIN",
+    "text": "Martin tuleb kiirustades, kapuuts peas. „Kuule. Kui keegi küsib, siis ma olin terve öö sinuga. Ära küsi miks. Trust me.“",
+    "choices": [
+      { "label": "„Selge. Olid minuga.“", "do": [{ "aff": { "martin": 2 } }, { "flag": "martin_alibi" },
+                                               { "chance": 0.3, "then": [{ "problem": 15 }, { "say": "Viis minutit hiljem küsib keegi turvavestis tüüp tõesti Martini kohta. Sa valetad. Süda peksab." }],
+                                                                "else": [{ "say": "Martin noogutab tänulikult ja kaob sama kiiresti, kui tuli." }] }] },
+      { "label": "„Mida sa tegid?“", "do": [{ "time": 10 }, { "met": "martin" }, { "say": "Ta seletab. Selgub, et ta võttis Seigast kogemata kellegi teise jope. See on väga hea jope. Ta ei anna seda tagasi." }] },
+      { "label": "„Ei, ma ei sega ennast sellesse“", "do": [{ "aff": { "martin": -2 } }, { "say": "„Okei. Okei. Ma mäletan seda,“ ütleb Martin." }] }
+    ]
+  },
+  {
+    "id": "a_phone", "speaker": "AIN",
+    "text": "Ain on paanikas. „Mu telefon on läinud. Helista mulle. Kiiresti. Palun. See on mu ELU.“",
+    "choices": [
+      { "label": "Helista talle", "do": [{ "phone": -2 }, { "time": 10 },
+        { "chance": 0.6, "then": [{ "aff": { "ain": 3 } }, { "log": "Leidsid Aini telefoni. See helises jäätisekülmikus." }, { "say": "Kuskilt kostab helin. Telefon on jäätisekülmikus. Keegi ei tea, kuidas. Ain kallistab sind nii kõvasti, et selg ragiseb." }],
+                         "else": [{ "aff": { "ain": 1 } }, { "say": "Kutsub, kutsub... keegi võtab vastu ja ütleb ainult „ei“. Ain on purustatud, aga tänulik." }] }] },
+      { "label": "„Vaata oma taskust“", "do": [{ "met": "ain" },
+        { "chance": 0.3, "then": [{ "aff": { "ain": 1 } }, { "say": "See oli ta taskus. Ta ei taha sellest rääkida." }],
+                         "else": [{ "aff": { "ain": -1 } }, { "say": "„Kas sa arvad, et ma pole vaadanud?!“ Ta jookseb minema otsima." }] }] },
+      { "label": "Pole aega", "do": [{ "aff": { "ain": -2 } }, { "say": "Ain vaatab sind nagu reeturit." }] }
+    ]
+  },
+
+  // ================================================================ VÕÕRAD JA FRIIGID
+  {
+    "id": "s_busker", "speaker": "TÄNAVAMUUSIK",
+    "text": "Tänavamuusik mängib kolmeakordilist versiooni „Mu isamaa armsast“ ja vaatab sind lootusrikkalt.",
+    "choices": [
+      { "label": "Viska 2 € kitarrikohvrisse", "do": [{ "money": -2 }, { "problem": -10 }, { "say": "Ta noogutab sulle nagu vana sõbrale. Hea tunne." }] },
+      { "label": "Telli soovilugu (5 €)", "do": [{ "money": -5 }, { "time": 10 }, { "problem": -18 }, { "log": "Tellisid tänavamuusikult sooviloo. Ta laulis selle valesti ja täiuslikult." }] },
+      { "label": "Haara mikrofon ja laula ise",
+        "do": [{ "time": 10 }, { "chance": { "var": "problem", "from": 20, "to": 100, "min": 0.8, "max": 0.2 },
+          "then": [{ "problem": -10 }, { "aff": { "jasper": 1 } }, { "log": "Laulsid tänavamuusikuga duetti. Rahvas plaksutas." }, { "say": "Tekib väike rahvahulk. Keegi filmib. Sa oled hetkeks kuulus." }],
+          "else": [{ "problem": 12 }, { "say": "Sa unustad sõnad juba esimesel real. Muusik võtab mikrofoni ettevaatlikult tagasi." }] }] },
+      { "label": "Kõnni mööda" }
+    ]
+  },
+  {
+    "id": "s_tourists", "speaker": "TURISTID",
+    "text": "Kaks soome turisti näitavad sulle telefonis kaarti. „Excuse me... where is... Raatuse?“",
+    "choices": [
+      { "label": "Juhata nad õigesse kohta", "do": [{ "time": 10 }, { "problem": -5 }, { "flag": "good_karma" }, { "say": "Nad tänavad sind kümme korda. Üks neist kirjutab su nime üles. Imelik, aga tore." }] },
+      { "label": "Saada nad meelega Annelinna", "do": [{ "problem": 5 }, { "flag": "bad_karma" }, { "say": "Nad tänavad sind siiralt ja hakkavad vales suunas kõndima. Sa tunned end halvasti. Natuke." }] },
+      { "label": "„Sorry, no English“", "do": [{ "say": "Nad vaatavad sind kahtlustavalt ja küsivad järgmiselt." }] }
+    ]
+  },
+  {
+    "id": "s_karma_good", "speaker": "TURISTID",
+    "text": "Needsamad soome turistid! Nad leidsid Raatuse üles ja on sulle nii tänulikud, et ostsid sulle midagi.",
+    "choices": [
+      { "label": "Võta vastu", "do": [{ "money": 10 }, { "problem": -8 }, { "unflag": "good_karma" }, { "log": "Soome turistid tänasid sind kümne euroga. Karma on päris." },
+                                       { "say": "Kümme eurot ja „kiitos“. Karma on päris." }] }
+    ]
+  },
+  {
+    "id": "s_karma_bad", "speaker": "TURISTID",
+    "text": "Needsamad soome turistid. Nad on Annelinnast tagasi kõndinud. Nad on väga vihased ja väga kained.",
+    "choices": [
+      { "label": "Vabanda ja maksa neile takso (10 €)", "do": [{ "money": -10 }, { "unflag": "bad_karma" }, { "say": "Nad võtavad raha ja lahkuvad pomisedes. Karma on päris." }] },
+      { "label": "Jookse", "do": [{ "time": 5 }, { "problem": 12 }, { "unflag": "bad_karma" }, { "say": "Soomlased on kiiremad, kui arvasid. Pääsed napilt." }] }
+    ]
+  },
+  {
+    "id": "s_promo", "speaker": "PROMOTÜDRUK",
+    "text": "Promotüdruk jagab tasuta shotte mingi uue energiajoogiga. „Proovi! Maitseb nagu... energia! Lowkey jumalik!“",
+    "choices": [
+      { "label": "Võta üks", "do": [{ "problem": 12 }, { "add": { "drinks": 1 } }, { "say": "Maitseb nagu sinine värv. Aga tasuta." }] },
+      { "label": "Võta kolm", "do": [{ "problem": 32 }, { "add": { "drinks": 3 } }, { "say": "Kolm tasuta shotti. Su süda lööb nüüd teises taktis kui muusika." }] },
+      { "label": "Ei, aitäh", "do": [{ "say": "Ta naeratab ja läheb järgmise ohvri juurde." }] }
+    ]
+  },
+  {
+    "id": "s_professor", "speaker": "ÕPPEJÕUD",
+    "text": "Sinu matemaatilise analüüsi õppejõud seisab sinu kõrval leti ääres. Ta tunneb su ära. Ta on üllatavalt purjus.",
+    "choices": [
+      { "label": "Räägi temaga loengust", "do": [{ "time": 15 }, { "problem": -10 }, { "log": "Rääkisid õppejõuga baaris piirväärtustest. See oli kummaliselt tore." },
+                                                 { "say": "Viisteist minutit piirväärtustest. Ta ütleb, et sa oled üks vähestest, kes kuulab. Võib-olla saad eksamil armu." }] },
+      { "label": "Telli talle õlu (4 €)", "do": [{ "add": { "drinks": 1 } }, { "money": -4 }, { "flag": "prof_friend" }, { "log": "Ostsid oma õppejõule õlle. Ta ütles: „Kohtume eksamil.“" },
+                                                { "say": "Ta võtab õlle, tõstab klaasi ja ütleb: „Kohtume eksamil.“ Sa ei tea, kas see oli hea või halb." }] },
+      { "label": "Peida end", "do": [{ "problem": 8 }, { "say": "Sa kükitad leti taha. Ta nägi sind. Kõik nägid sind." }] }
+    ]
+  },
+  {
+    "id": "s_erasmus", "speaker": "ERASMUSE TUDENG",
+    "text": "Hispaania Erasmuse tudeng tahab sinuga jopesid vahetada. „Your jacket is very... Estonian. I need.“ Tema jope on objektiivselt parem.",
+    "choices": [
+      { "label": "Vaheta jopet", "do": [{ "flag": "swapped_jacket" }, { "remove_item": ["cigs", "kebab_takeaway"] },
+        { "chance": 0.4, "then": [{ "money": 20 }, { "log": "Vahetasid Erasmuse tudengiga jopet. Taskus oli 20 eurot." }, { "say": "Uue jope taskus on 20 eurot. Su vanas jopes jäid kõik su asjad. Kõik." }],
+                         "else": [{ "log": "Vahetasid Erasmuse tudengiga jopet. Kõik su asjad jäid vanasse." }, { "say": "Uus jope on soe ja lõhnab apelsini järele. Su vanas jopes jäid kõik su asjad. Kõik." }] }] },
+      { "label": "Õpeta talle eesti keelt", "do": [{ "time": 10 }, { "problem": -8 }, { "log": "Õpetasid Erasmuse tudengile sõna „jäääär“." }, { "say": "Ta õpib ära sõna „jäääär“ ja on sellest siiralt šokis." }] },
+      { "label": "„No, gracias“", "do": [{ "say": "Ta kehitab õlgu ja läheb järgmise eestlase juurde." }] }
+    ]
+  },
+  {
+    "id": "s_cat", "speaker": "KASS",
+    "text": "Tänavakass istub ja vaatab sind. Ta on ainuke kaine olend siin kandis.",
+    "choices": [
+      { "label": "Silita kassi", "do": [{ "time": 5 }, { "problem": -15 }, { "log": "Silitasid tänavakassi. Öö parim hetk." }, { "say": "Ta lubab. Viis minutit nurrumist. Kõik on hästi." }] },
+      { "label": "Anna talle tükk kebabi", "if": [{ "item": "kebab" }], "locked": "Sul pole kebabi",
+        "do": [{ "time": 5 }, { "problem": -20 }, { "remove_item": "kebab" }, { "flag": "cat_friend" }, { "say": "Kass sööb ja järgneb sulle siis veel paarkümmend meetrit. Sul on nüüd kass. Ajutiselt." }] },
+      { "label": "Kõnni edasi", "do": [{ "say": "Kass vaatab sind halvustavalt. Ta on pettunud. Kassid on alati pettunud." }] }
+    ]
+  },
+  {
+    "id": "s_wallet", "speaker": "",
+    "text": "Maas vedeleb rahakott. Sees on 40 eurot ja kellegi ID-kaart. Pildil olev tüüp näeb välja nagu ta teeks jõusaalis kaks korda päevas trenni.",
+    "choices": [
+      { "label": "Vii see turvamehele", "do": [{ "time": 10 }, { "problem": -5 }, { "flag": "good_karma" }, { "say": "Turvamees noogutab. Su südametunnistus on puhas ja kerge." }] },
+      { "label": "Hoia alles ja otsi omanik ise üles", "do": [{ "item": "found_wallet" }, { "task_add": "wallet_return" }, { "say": "Paned rahakoti taskusse. Nüüd on sul missioon. Omanik on kuskil baaris, tõenäoliselt paanikas." }] },
+      { "label": "Võta raha ja viska rahakott ära", "do": [{ "money": 40 }, { "problem": 10 }, { "flag": "took_wallet" }, { "say": "40 eurot. Su süda peksab natuke kiiremini." }] },
+      { "label": "Jäta maha", "do": [{ "say": "Pole sinu asi. Keegi teine leiab." }] }
+    ]
+  },
+  {
+    "id": "s_wallet_owner", "speaker": "RAHAKOTI OMANIK",
+    "text": "Suur tüüp otsib oma rahakotti. Ta vaatab ringi. Ta vaatab sulle otsa. Ta tunneb oma rahakoti kaardihoidjat sinu käes.",
+    "choices": [
+      { "label": "Anna raha tagasi (40 €)", "if": [{ "var": "money", ">=": 40 }], "locked": "Sul pole enam 40 eurot",
+        "do": [{ "money": -40 }, { "unflag": "took_wallet" }, { "say": "Ta võtab raha ja vaatab sind kaua. Lõpuks noogutab. Sa elad." }] },
+      { "label": "Valeta", "do": [{ "unflag": "took_wallet" },
+        { "chance": { "var": "problem", "from": 0, "to": 100, "min": 0.6, "max": 0.1 },
+          "then": [{ "say": "Sa valetad nii hästi, et usud seda isegi ise. Ta läheb edasi otsima." }],
+          "else": [{ "scene": "altercation" }] }] },
+      { "label": "Jookse", "do": [{ "time": 5 }, { "problem": 15 }, { "unflag": "took_wallet" }, { "say": "Jooksed nii kiiresti, et unustad hingata." }] }
+    ]
+  },
+  {
+    "id": "s_classmate", "speaker": "KLASSIÕDE",
+    "text": "Sinu põhikooli klassiõde! Ta tahab teada KÕIKE, mis viimase kaheksa aasta jooksul juhtunud on. Kõike.",
+    "choices": [
+      { "label": "Räägi kõik ära", "do": [{ "time": 25 }, { "problem": -10 }, { "say": "Kakskümmend viis minutit hiljem tead ka sina kõike tema elust. Tal on kolm koera ja üks podcast." }] },
+      { "label": "„Väga tore, aga ma tõttan“", "do": [{ "time": 2 }, { "problem": 5 }, { "say": "„Lisa mind Instas! Followi tagasi!“ hüüab ta su järele." }] },
+      { "label": "Kutsu ta poistega liituma", "do": [{ "time": 10 }, { "aff": { "jasper": 1, "ain": 1 } }, { "say": "Ta ühineb. Ain armub kohe. Jasper hakkab talle laulma. Sa oled sotsiaalne geenius." }] }
+    ]
+  },
+  {
+    "id": "s_kebab_thief", "speaker": "KEBABIVARAS",
+    "text": "Keegi kapuutsiga tüüp haarab sul jope taskust kaasavõetud kebabi ja pistab jooksu!",
+    "choices": [
+      { "label": "Jookse talle järele", "do": [{ "time": 10 }, { "problem": 10 },
+        { "chance": 0.5, "then": [{ "log": "Ajasid kebabivarast taga ja said kebabi tagasi." }, { "say": "Saad ta kätte. Ta annab kebabi tagasi ja vabandab. Ta oli lihtsalt näljane. Kõik on." }],
+                         "else": [{ "remove_item": "kebab_takeaway" }, { "log": "Kebabivaras pääses. Toakaaslase kebab on läinud." }, { "say": "Ta on kiirem. Kebab on läinud. Toakaaslane ei andesta seda kunagi." }] }] },
+      { "label": "Lase tal minna", "do": [{ "remove_item": "kebab_takeaway" }, { "problem": 5 }, { "say": "Ta oli ilmselt näljasem kui su toakaaslane. Ilmselt." }] }
+    ]
+  },
+  {
+    "id": "s_rain", "speaker": "",
+    "text": "Taevas avaneb. Kallab nagu oavarrest. Kõik ümberringi jooksevad varjualuste alla.",
+    "choices": [
+      { "label": "Oota varjualuses", "do": [{ "time": 15 }, { "problem": -5 }, { "say": "Viisteist minutit vihma vaatamist. Meditatiivne." }] },
+      { "label": "Jookse läbi vihma", "do": [{ "time": 2 }, { "phone": -6 }, { "problem": 6 }, { "say": "Oled läbimärg. Telefon ka. Ta elab, aga pahameelega." }] }
+    ]
+  },
+  {
+    "id": "s_keys_lost", "speaker": "",
+    "text": "Katsud taskut. Ja teist taskut. Ja kolmandat. Võtmeid pole.",
+    "choices": [
+      { "label": "Otsi kõik taskud korralikult läbi", "do": [{ "time": 5 },
+        { "chance": 0.25, "then": [{ "say": "Need olid su sokis. Sa ei taha teada, miks." }],
+                          "else": [{ "flag": "lost_keys" }, { "log": "Kaotasid võtmed." }, { "say": "Ei kuskil. Koju sisse saamine on nüüd omaette ülesanne." }] }] },
+      { "label": "Küll need leiduvad", "do": [{ "flag": "lost_keys" }, { "log": "Kaotasid võtmed." }, { "say": "Muidugi leiduvad. Kindlasti. Peaaegu kindlasti." }] }
+    ]
+  },
+  {
+    "id": "s_keys_found", "speaker": "BAARMAN",
+    "text": "Baarman vehib võtmekimbuga. „Keegi jättis need letile. Sinu omad?“ Su võtmehoidja on väike plastist kebab. Need on sinu omad.",
+    "choices": [
+      { "label": "Jah! (jootraha 3 €)", "do": [{ "money": -3 }, { "unflag": "lost_keys" }, { "log": "Leidsid võtmed baarist üles." }, { "say": "Baarman naeratab. Su võtmed on tagasi. Maailm on jälle korras." }] },
+      { "label": "Jah! (ilma jootrahata)", "do": [{ "unflag": "lost_keys" }, { "problem": 5 }, { "say": "Baarman ulatab need üle pilguga, mis ütleb kõik." }] }
+    ]
+  },
+  {
+    "id": "s_bakery", "speaker": "",
+    "text": "Hommikune pagarikoda avab uksed. Värske saia lõhn lööb sulle näkku nagu hea mälestus.",
+    "choices": [
+      { "label": "Osta pirukas (3 €)", "do": [{ "money": -3 }, { "time": 5 }, { "problem": -15 }, { "log": "Ostsid hommikul esimese piruka. Täiuslik." }, { "say": "Soe pirukas. See on parim asi, mis sa kunagi söönud oled." }] },
+      { "label": "Osta tort (6 €)", "show_if": [{ "not_item": "torta" }], "if": [{ "var": "money", ">=": 6 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -6 }, { "item": "torta" }, { "say": "Pagar pakib tordi karpi. Karbil on suurte tähtedega kiri: „TORTA“. Sa tunned kuskil sügaval, et see on oluline." }] },
+      { "label": "Pole aega, päike tuleb", "do": [{ "say": "Sa kõnnid lõhnast mööda. See jääb sind kummitama." }] }
+    ]
+  },
+
+  // ================================================================ TRUUSE JA KAARNA (Rüütli kandis)
+  {
+    "id": "tk_pigeons", "speaker": "TRUUSE JA KAARNA",
+    "text": "Truuse seletab Kaarnale väga tõsiselt, et Tartu tuvid on tegelikult ülikooli 1998. aasta katse ja neil kõigil on jalas seerianumbrid. Kaarna vaatab sind pilguga, mis karjub abi järele.",
+    "choices": [
+      { "label": "„Jah, mu onu töötas seal projektis“",
+        "do": [{ "time": 10 }, { "problem": 5 }, { "aff": { "truuse": 2, "kaarna": -1 } },
+               { "say": "Truuse lööb käed kokku. „NÄED, KAARNA?!“ Kaarna sulgeb silmad ja loeb vaikselt kümneni." }] },
+      { "label": "„Truuse, see oli eelmise nädala meem“",
+        "do": [{ "aff": { "kaarna": 2, "truuse": -1 } },
+               { "say": "Kaarna osutab sulle: „Aitäh. AITÄH.“ Truuse pomiseb, et meemid põhinevad alati tõestisündinud lool." }] },
+      { "label": "„Ja Raekoja purskkaev on nende laadimisjaam“",
+        "do": [{ "time": 15 }, { "problem": -10 }, { "aff": { "truuse": 1, "kaarna": 1 } },
+               { "log": "Arendasid Truuse ja Kaarnaga välja tuvide vandenõuteooria." },
+               { "say": "Kaarna naerab nii, et jook tuleb ninast välja. Truuse võtab märkmeid. Te olete nüüd kolmekesi selles." }] },
+      { "label": "„...torta.“", "show_if": [{ "any": [{ "flag": "knows_torta" }, { "item": "torta" }] }], "next": "truuse_torta" },
+      { "label": "Kõnni edasi", "do": [{ "met": ["truuse", "kaarna"] }] }
+    ]
+  },
+  {
+    "id": "tk_horse", "speaker": "TRUUSE JA KAARNA",
+    "text": "Truuse: „...ja mu hobune Pärnus, Kalevipoeg, võitis eelmisel aastal Euroopa meistrivõistlused.“ Kaarna: „Truuse, sa kardad hobuseid.“ Truuse: „Sellepärast ma ta ostsingi. Et hirmust üle saada.“",
+    "choices": [
+      { "label": "Küsi hobuse kohta detaile",
+        "do": [{ "time": 15 }, { "aff": { "truuse": 2 } },
+               { "say": "Hobune sööb ainult kohukesi, kuulab Ultima Thulet ja tal on oma Instagram, mis on „praegu privaatne“. Truuse on väga rahul." }] },
+      { "label": "Küsi Kaarnalt, kuidas ta seda kõike välja kannatab",
+        "do": [{ "time": 5 }, { "aff": { "kaarna": 2 } },
+               { "say": "Kaarna: „Ta on naljakas. Ja tal on alati laadija kaasas.“ Truuse noogutab uhkelt. See on tõsi. Tal on alati laadija." }] },
+      { "label": "Pane Kalevipojale 5 € panus",
+        "do": [{ "money": -5 }, { "aff": { "truuse": 1 } },
+               { "chance": 0.1,
+                 "then": [{ "money": 50 }, { "log": "Panid Truuse hobusele 5 eurot. Kuidagi võitsid 50." }, { "say": "Pool tundi hiljem saadab Truuse sulle 50 eurot ja ühe sõna: „KALEVIPOEG.“ Mida." }],
+                 "else": [{ "say": "Truuse võtab raha ja lubab hiljem aru anda. Ta ei anna kunagi aru." }] }] },
+      { "label": "„...torta.“", "show_if": [{ "any": [{ "flag": "knows_torta" }, { "item": "torta" }] }], "next": "truuse_torta" },
+      { "label": "Küsi Kaarnalt, kuidas ta seda kõike talub", "show_if": [{ "not_flag": "knows_torta" }],
+        "do": [{ "flag": "knows_torta" }, { "aff": { "kaarna": 1 } }, { "say": "Kaarna tõmbab su kõrvale ja sosistab: „Üks reegel. Ära IIAL ütle tema juures sõna „torta“. Ma ei seleta. Lihtsalt ära ütle.“" }] },
+      { "label": "Kõnni edasi", "do": [{ "met": ["truuse", "kaarna"] }] }
+    ]
+  },
+  {
+    "id": "tk_river", "speaker": "TRUUSE JA KAARNA",
+    "text": "Truuse: „Emajõgi voolab teisipäeviti tagurpidi. See on teaduslik fakt.“ Kaarna: „Täna on reede.“ Truuse: „Seepärast ta praegu õigetpidi voolabki.“ Mõlemad pöörduvad sinu poole.",
+    "choices": [
+      { "label": "„Jaan rääkis mulle sama asja“", "do": [{ "aff": { "truuse": 2, "kaarna": -1 } }, { "say": "Truuse: „Jaan teab. Jaan teab kõike.“ Kaarna võtab telefoni, et Jaanile helistada. Jaan ei vasta, ta magab." }] },
+      { "label": "„Lähme kontrollime järele“",
+        "do": [{ "time": 15 }, { "aff": { "truuse": 2, "kaarna": 1 } }, { "log": "Läksid Truuse ja Kaarnaga kontrollima, kummale poole Emajõgi voolab." }, { "goto": "emajogi" },
+               { "say": "Te seisate kolmekesi kaldal ja vahite vett. Truuse ütleb, et see liigub kahtlaselt. Kaarna ütleb, et see liigub täiesti normaalselt." }] },
+      { "label": "„...torta.“", "show_if": [{ "any": [{ "flag": "knows_torta" }, { "item": "torta" }] }], "next": "truuse_torta" },
+      { "label": "„Kaarna, kas viin ta ära?“", "do": [{ "aff": { "kaarna": 2, "truuse": -2 } }, { "say": "Kaarna: „Palun.“ Truuse: „Ma olen siinsamas!“ Kaarna: „Ma tean.“" }] }
+    ]
+  },
+  {
+    "id": "meet_truuse", "speaker": "TRUUSE JA KAARNA",
+    "text": "Truuse seletab Kaarnale midagi kätega vehkides. Kaarna on juba kolmandat korda „mhmh“ öelnud.",
+    "choices": [
+      { "label": "Kuula ka", "do": [{ "time": 10 }, { "problem": -5 }, { "aff": { "truuse": 1 } }, { "say": "Seekord räägib ta sellest, et Tartu ülikooli peahoone sammastes on peidus ruumid. Kaarna noogutab, kuna ta on loobunud." }] },
+      { "label": "„...torta.“", "show_if": [{ "any": [{ "flag": "knows_torta" }, { "item": "torta" }] }], "next": "truuse_torta" },
+      { "label": "Kõnni edasi", "do": [{ "met": ["truuse", "kaarna"] }] }
+    ]
+  },
+  {
+    "id": "call_truuse", "speaker": "TRUUSE (TELEFON)",
+    "redirect": { "if": [{ "flag": "truuse_arrested" }], "to": "call_truuse_jail" },
+    "text": "Truuse vastab keset lauset: „...ja SEEPÄRAST ongi kuu tegelikult... oot, keegi helistab. Halloo?“ Taustal ütleb Kaarna: „Pane toru ära.“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "truuse" }], "next": "call_truuse_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "truuse", "chance": 0.6 } }] },
+      { "label": "„Kuidas Kalevipoeg (hobune) läheb?“", "do": [{ "time": 10 }, { "phone": -3 }, { "aff": { "truuse": 2 } }, { "say": "Truuse räägib kümme minutit hobuse uuest dieedist. Kaarna karjub taustal: „Seda hobust ei ole olemas!“" }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "truuse" }] }
+    ]
+  },
+  {
+    "id": "call_truuse_2", "speaker": "TRUUSE (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "truuse" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "truuse", "chance": 0.6 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+
+  // ================================================================ JASPERI KÜSIMUSED
+  {
+    "id": "j_q1", "speaker": "JASPER",
+    "text": "Jasper, ilma tervituseta: „Kui sa saaksid olla ükskõik milline Tartu sild, siis milline sa oleksid? Ja miks? Mõtle hoolega.“",
+    "choices": [
+      { "label": "Inglisild. Romantiline ja natuke kummitav.", "do": [{ "time": 5 }, { "problem": -5 }, { "aff": { "jasper": 2 } }, { "say": "Jasper noogutab aeglaselt. „Jah. Ma näen seda sinus.“" }] },
+      { "label": "Kaarsild, mida enam pole. Traagiline.", "do": [{ "time": 10 }, { "aff": { "jasper": 3 } }, { "log": "Ütlesid Jasperile, et oled Kaarsild. Ta nuttis natuke." }, { "say": "Jasperi silmad lähevad märjaks. „See on kõige ilusam vastus, mida ma kunagi kuulnud olen.“" }] },
+      { "label": "Vabaduse sild, seal ei juhtu kunagi midagi.", "do": [{ "aff": { "jasper": -1 } }, { "problem": -5 }, { "say": "„Huvitav,“ ütleb Jasper tooniga, mis tähendab, et see pole üldse huvitav." }] }
+    ]
+  },
+  {
+    "id": "j_q2", "speaker": "JASPER",
+    "text": "„Okei. Tõsine küsimus, fr. Kas õlu on vedel leib või on leib tahke õlu?“",
+    "choices": [
+      { "label": "Õlu on vedel leib.", "do": [{ "aff": { "jasper": 1 } }, { "say": "„Klassikaline. Turvaline. Ma austan seda.“" }] },
+      { "label": "Leib on tahke õlu.", "do": [{ "time": 10 }, { "problem": 5 }, { "aff": { "jasper": 2 } }, { "say": "Jasper karjub „VAU“ nii valjult, et pool baari vaatab. Ta kirjutab selle telefoni märkmetesse." }] },
+      { "label": "Mõlemad on lihtsalt toit, Jasper.", "do": [{ "aff": { "jasper": -1 } }, { "say": "„Sa oled kõige igavam inimene, keda ma tunnen, ausalt, cringe,“ ütleb ta armastusega." }] }
+    ]
+  },
+  {
+    "id": "j_q3", "speaker": "JASPER",
+    "text": "„Kui kõik inimesed oleksid kassid, siis kes meie seltskonnast oleks kõige rohkem kass?“",
+    "choices": [
+      { "label": "Tristan. Ta lükkaks klaasi lauast alla, vaadates sulle otsa.", "do": [{ "aff": { "jasper": 2 } }, { "say": "Jasper naerab. „Ja siis teeks ta seda uuesti.“" }] },
+      { "label": "Sina, Jasper. Sa magad 16 tundi päevas.", "do": [{ "problem": -5 }, { "aff": { "jasper": 2 } }, { "say": "„See on laim. Ma magan 14.“" }] },
+      { "label": "Ain. Tal ei saa kunagi krõbinad otsa.", "do": [{ "aff": { "jasper": 1, "ain": 1 } }, { "say": "Jasper: „Ja keegi ei tea, kust need tulevad.“ Te mõlemad vaikite hetke." }] }
+    ]
+  },
+  {
+    "id": "j_q4", "speaker": "JASPER",
+    "text": "„Mis on su lemmiktäht tähestikus? Ära ütle Õ. Kõik ütlevad Õ.“",
+    "choices": [
+      { "label": "Õ.", "do": [{ "aff": { "jasper": -1 } }, { "say": "Jasper ohkab sügavalt, nagu oleksid ta südame murdnud." }] },
+      { "label": "Ž, sest keegi ei kasuta seda.", "do": [{ "aff": { "jasper": 2 } }, { "say": "„Õige. Ž on alahinnatud. Ž on underdog.“" }] },
+      { "label": "Q. Ta on üksik, nagu mina.", "do": [{ "problem": -5 }, { "aff": { "jasper": 3 } }, { "say": "Jasper paneb käe su õlale ja ei ütle midagi. See on parim asi, mida ta öelda saaks." }] }
+    ]
+  },
+  {
+    "id": "j_q5", "speaker": "JASPER",
+    "text": "Jasper, täiesti tõsiselt: „Kui sa saaksid teada täpse kellaaja, millal see öö lõpeb, kas sa tahaksid teada?“",
+    "choices": [
+      { "label": "Ei, see rikuks kogu öö ära.", "do": [{ "problem": -5 }, { "aff": { "jasper": 1 } }, { "say": "„Elad hetkes. Ma kadestan seda.“" }] },
+      { "label": "Jah. Et teaksin, kas jõuan enne päikesetõusu koju.", "do": [{ "aff": { "jasper": 2 } }, { "say": "Jasper vaatab taeva poole. „Mõned meist ei jõua kunagi.“ Ta mõtleb Tristanit." }] },
+      { "label": "„Jasper, me oleme baaris“", "do": [{ "problem": -5 }, { "say": "„Kõik suured mõtted on mõeldud baaris,“ ütleb Jasper solvunult." }] }
+    ]
+  },
+  {
+    "id": "j_q6", "speaker": "JASPER",
+    "text": "„Mõtle. Kas Kalevipoeg oleks tänapäeval TikTokis?“",
+    "choices": [
+      { "label": "Jah. Kiviviskamise videod, miljon vaatamist.", "do": [{ "time": 10 }, { "aff": { "jasper": 2 } }, { "say": "Te mõtlete koos välja kümme tema videot. Kõige parem on „POV: sa oled Peipsi järv“." }] },
+      { "label": "Ei. Ta oleks LinkedInis.", "do": [{ "time": 10 }, { "aff": { "jasper": 3 } }, { "log": "Arutasid Jasperiga, kas Kalevipoeg oleks LinkedInis. Ta oleks." }, { "say": "„Kalevipoeg | Kangelane | Avatud uutele väljakutsetele.“ Jasper ei saa naermisest hingata." }] },
+      { "label": "„Kes on Kalevipoeg?“", "do": [{ "aff": { "jasper": -2 } }, { "say": "Jasper vaatab sind nagu reeturit. Pikalt." }] }
+    ]
+  },
+  {
+    "id": "j_q7", "speaker": "JASPER",
+    "text": "„Kui Tartu oleks inimene, kas sa läheksid temaga kohtingule?“",
+    "choices": [
+      { "label": "Jah. Ta on vana, aga stiilne.", "do": [{ "aff": { "jasper": 2 } }, { "say": "„Ta maksaks arve eest. Aga ainult sularahas.“" }] },
+      { "label": "Ei. Liiga palju tudengeid ümber.", "do": [{ "aff": { "jasper": 1 } }, { "say": "Jasper noogutab. „Ta on natuke ennasttäis ka.“" }] },
+      { "label": "Ma juba käin. See on keeruline.", "do": [{ "problem": -5 }, { "aff": { "jasper": 2 } }, { "say": "Jasper patsutab sulle õlale. „Me kõik käime, kutt. Me kõik käime. It is what it is.“" }] }
+    ]
+  },
+  {
+    "id": "j_q8", "speaker": "JASPER",
+    "text": "„Kui sa oleksid tuvi, mis oleks su nimi? Ära mõtle, ütle kohe.“",
+    "choices": [
+      { "label": "Raivo.", "do": [{ "aff": { "jasper": 2 } }, { "say": "„Raivo. Jah. Raivo on näinud asju.“" }] },
+      { "label": "Härra Seerianumber 1998.", "do": [{ "aff": { "jasper": 2, "truuse": 1 } }, { "say": "Jasper ei saa naljast aru, aga kuskil kaugel tunneb Truuse end äkki mõistetuna." }] },
+      { "label": "Ma ei taha olla tuvi.", "do": [{ "aff": { "jasper": -1 } }, { "say": "„Kõik tahavad olla tuvi,“ ütleb Jasper vaikselt." }] }
+    ]
+  },
+
+  // ================================================================ MÄRT
+  {
+    "id": "mart_seek", "speaker": "MÄRT",
+    "text": "Märt, laiade õlgade ja veel laiemate kavatsustega, astub su juurde. „Kus Ain on? Me peame rääkima. Ta teab, miks.“",
+    "choices": [
+      { "label": "Ütle, kus Ain on", "do": [{ "flag": ["mart_seen", "sold_out_ain"] }, { "aff": { "ain": -3 } }, { "met": "mart" },
+                                         { "say": "Märt noogutab ja marsib minema. Kuskil kaugel hakkab Aini telefon vibreerima." }] },
+      { "label": "Kaitse Aini: „Ain on hea inimene“",
+        "do": [{ "flag": "mart_seen" }, { "met": "mart" },
+               { "chance": 0.5, "then": [{ "aff": { "ain": 2 } }, { "say": "Märt vaatab sind kaua. „Okei. Sinu pärast.“ Ta läheb. Esialgu." }],
+                                "else": [{ "aff": { "ain": 2 } }, { "scene": "mart_fight" }] }] },
+      { "label": "Helista Ainile ja hoiata teda", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -2 }, { "flag": ["mart_seen", "warned_ain"] }, { "aff": { "ain": 2 } }, { "met": "mart" },
+               { "say": "Ain vastab sosinal: „Tänan. Ma kaon.“ Ja ta kaobki. Ain oskab kaduda." }] },
+      { "label": "„Märt, lase olla, on reede“",
+        "do": [{ "time": 10 }, { "flag": "mart_seen" }, { "met": "mart" },
+               { "chance": 0.4, "then": [{ "problem": -5 }, { "log": "Rahustasid Märdi maha. Ajutiselt." }, { "say": "Märt ohkab. „Sul on õigus. On reede.“ Ta ostab endale vee. See on Märdi jaoks suur samm." }],
+                                "else": [{ "problem": 10 }, { "say": "„Reede on just see päev,“ ütleb Märt ja lahkub Aini otsima." }] }] }
+    ]
+  },
+  {
+    "id": "mart_fight", "speaker": "MÄRT",
+    "text": "Märt ei taha tegelikult sinuga tülli minna. Aga ta teeb erandi.",
+    "choices": [
+      { "label": "Astu vastu",
+        "do": [{ "random": [
+          { "weight": 35, "do": [{ "problem": 12 }, { "flag": "won_fight" }, { "aff": { "ain": 2 } }, { "log": "Võitsid Märdi Aini au eest. Keegi ei usu seda." }, { "say": "Märt libiseb mahaläinud õllel ja otsustab, et see oli märk. Ta lahkub. Sa võitsid. Kuidagi." }] },
+          { "weight": 65, "do": [{ "time": 25 }, { "problem": 10 }, { "phone": -8 }, { "log": "Märt näitas sulle, miks temaga tülli ei minda." }, { "say": "Märt on tõesti väga lai. Pool tundi hiljem istud äärekivil ja mõtled oma valikutele." }] }
+        ] }] },
+      { "label": "Vabanda ja tagane", "do": [{ "problem": -5 }, { "say": "Märt noogutab. Ta austab taganemist. See on tema lemmik asi." }] }
+    ]
+  },
+  {
+    "id": "mart_vs_ain", "speaker": "MÄRT JA AIN",
+    "text": "Märt ja Ain seisavad teineteise vastas. Märt: „Sa tead, mida sa tegid.“ Ain: „Ma ostsin sulle kaks aastat tagasi ühe õlle vähem kui kõigile teistele. Ma tean. Ma elan sellega iga päev.“",
+    "choices": [
+      { "label": "Astu Aini kõrvale",
+        "do": [{ "aff": { "ain": 3 } }, { "unflag": "mart_seen" },
+               { "random": [
+                 { "weight": 50, "do": [{ "log": "Seisid Märdi vastu Aini kõrval. Märt taganes." }, { "say": "Märt vaatab teid kahte, ohkab ja kõnnib minema. Kui ringi vaatad, on ka Ain kadunud. Lihtsalt läinud. Ta teeb seda." }] },
+                 { "weight": 50, "do": [{ "time": 20 }, { "problem": 15 }, { "say": "Läheb nügimiseks. Keset seda kaob Ain müstiliselt ja sina jääd üksi Märdiga. Turvamees lahutab teid kahekümne minuti pärast." }] }
+               ] }] },
+      { "label": "Lase Kardol karjuda", "show_if": [{ "friend_here": "kardo" }],
+        "do": [{ "problem": -10 }, { "aff": { "kardo": 1, "ain": 1 } }, { "unflag": "mart_seen" }, { "flag": "mart_peace" },
+               { "log": "Kardo karjus Märdi ja Aini tüli lõpuks lõpuni." },
+               { "say": "Kardo: „KAKS AASTAT. ÜHE ÕLLE PÄRAST. MÄRT, MA OSTAN SULLE KAKS. AIN, SA JÄÄD SIIA.“ Ain jääb. Esimest korda elus ei kao Ain. Märt kallistab teda." }] },
+      { "label": "Osta Märdile see üks õlu ära (4 €)",
+        "do": [{ "money": -4 }, { "problem": -10 }, { "aff": { "ain": 2 } }, { "unflag": "mart_seen" }, { "flag": "mart_peace" },
+               { "log": "Lõpetasid Märdi ja Aini kaheaastase tüli ühe õllega." },
+               { "say": "Märt võtab õlle. Vaatab seda. Vaatab Aini. „...Okei.“ Kaks aastat tüli lõppes nelja euroga. Ain on samal hetkel juba kadunud, aga ta saatis sulle südame." }] },
+      { "label": "Filmi kõike", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -3 }, { "aff": { "ain": -1 } }, { "unflag": "mart_seen" }, { "say": "Video saab grupivestluses 40 reaktsiooni. Ain ei pane sulle südant." }] },
+      { "label": "Kõnni minema", "do": [{ "aff": { "ain": -1 } }, { "unflag": "mart_seen" }] }
+    ]
+  },
+
+  // ================================================================ ANNU
+  {
+    "id": "annu_ask", "speaker": "ANNU",
+    "text": "Annu küsib tuld. „Teeme ühe koos? Mul on vaja rääkida kellegagi, kes kuulab.“",
+    "choices": [
+      { "label": "Tee Annuga suitsu", "next": "annu_talk", "do": [{ "time": 5 }, { "met": "annu" }] },
+      { "label": "Anna tuli ja mine edasi", "do": [{ "met": "annu" }, { "say": "Annu tänab ja vaatab sulle järele nagu inimesele, kes jääb ilma millestki olulisest." }] }
+    ]
+  },
+  {
+    "id": "annu_talk", "speaker": "ANNU",
+    "text": "Kolmanda mahvi ajal läheb Annu tõsiseks. „Tead, mis tänapäeva probleem on? Inimesed on unustanud traditsioonid. Pere. Kodused väärtused. Pühapäevane lõuna. Vanasti tehti asju korralikult.“ Ta vaatab sind ootusärevalt.",
+    "choices": [
+      { "label": "Noogutad ja kuulad",
+        "do": [{ "time": 20 }, { "problem": -5 }, { "aff": { "annu": 2 } },
+               { "say": "Annu räägib talgutest, rahvariietest ja sellest, kuidas tema vanaema küpsetas igal laupäeval leiba. Paarkümmend minutit hiljem tunned end imelikult soojalt." }] },
+      { "label": "Vaidle vastu",
+        "do": [{ "time": 35 }, { "problem": 10 }, { "aff": { "annu": 1 } }, { "log": "Vaidlesid Annuga suitsunurgas maailmavaadete üle. Keegi ei võitnud, suitsud said otsa." },
+               { "say": "Pool tundi hiljem on suitsud ammu otsas ja te mõlemad olete veendunud, et teine eksib. Annu ütleb, et sa oled vähemalt korralik vastane." }] },
+      { "label": "„Mis su vanaema leiva saladus oli?“",
+        "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "annu": 2 } }, { "say": "Annu silmad lähevad särama. Saladus on köömned ja kannatlikkus. Sa ei tea, miks, aga see on parim retsept, mida sa kunagi kuulnud oled." }] },
+      { "label": "Kustuta suits ja lahku kiiresti", "do": [{ "aff": { "annu": -1 } }, { "say": "„Te noored ei kuula kunagi,“ hüüab Annu sulle järele." }] }
+    ]
+  },
+
+  // ================================================================ ETS
+  {
+    "id": "ets", "speaker": "ETS",
+    "text": "Ets naeratab nagu tal oleks plaan. Tal on alati plaan. Plaan on alati nali. Varuks on tal veel umbes nelisada.",
+    "choices": [
+      { "label": "„Räägi kiisunali“", "next": "ets", "do": [{ "time": 2 }, { "problem": -3 }, { "met": "ets" }, { "random": [
+        { "do": [{ "say": "Ets: „Mis on kassi lemmikbänd? Kiss.“" }] },
+        { "do": [{ "say": "Ets: „Miks kass arvutit ei kasuta? Ta kardab, et hiir kaob.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmikjook? Mjäu-hito.“" }] },
+        { "do": [{ "say": "Ets: „Kuidas kass poes maksab? Kassas.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmiksaar? Kassari.“" }] },
+        { "do": [{ "say": "Ets: „Kuidas kutsutakse kassi, kes ujub? Kassikala.“" }] },
+        { "do": [{ "say": "Ets: „Miks kass eksamil läbi kukkus? Ta tegi ainult kriimustusi.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmikfilm? Kiisu-kiisu, Bang Bang.“" }] },
+        { "do": [{ "say": "Ets: „Miks kassid on head DJ-d? Neil on küüned alati scratchimiseks valmis.“" }] },
+        { "do": [{ "say": "Ets: „Miks kass alati võidab? Tal on üheksa elu ja mitte ühtegi häbi.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmikmatemaatika? Mjäuinus ja koosinus.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmik seltskonnamäng? Alias. Ta ütleb lihtsalt „mjäu“ ja võidab.“" }] },
+        { "do": [{ "say": "Ets: „Kass läheb baari ja tellib piima. Baarman küsib: jääga? Kass: mjäu-ks mitte.“" }] },
+        { "do": [{ "say": "Ets: „Mis on kassi lemmikpäev? Kassipäev. Iga päev on kassipäev.“" }] },
+        { "do": [{ "say": "Ets: „Kuidas kass Tartus ringi liigub? Kiisu-Bolt. Tal on viis tärni, sest ta ei räägi.“" }] },
+        { "do": [{ "say": "Ets: „Mis kass ütleb, kui ta kaotab? Mjäu-õiglane.“" }] }
+      ] }] },
+      { "label": "„Räägi su ema nali“", "next": "ets", "do": [{ "time": 2 }, { "problem": -3 }, { "met": "ets" }, { "random": [
+        { "do": [{ "say": "Ets: „Su ema on nii vana, et mäletab aega, kui Emajõgi oli lihtsalt Jõgi.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii aeglane, et jäi 2019. aastal HASi järjekorda ja on seal siiani.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii tark, et Jaan helistab talle tuumafüüsika küsimustega.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii lahe, et Seiga turvamees küsib temalt luba.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii vana, et tema esimene ID-kaart oli kivitahvel.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii kõva, et isegi Märt ei lähe temaga tülli.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii kuulus, et tänavamuusik küsis temalt autogrammi.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii kiire, et jõuab Kaubamaja parklast koju enne Bolti.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii hea kokk, et HAS ostis tema retsepti ja rikkus selle ära.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii vana, et ta käis Kalevipojaga ühel peol.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii lahke, et laenas Tristanile 10 eurot ja SAI SELLE TAGASI.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii rikas, et isegi Ain küsib temalt raha.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii kõrge, et ta näeb Toomemäelt Annelinna.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii hea laulja, et Jasper kirjutas talle oodi. Kolm salmi. Ta laulab seda praegu.“" }] },
+        { "do": [{ "say": "Ets: „Su ema helistas mulle. Ta tahtis teada, kus sa oled. Ütlesin, et Rüütlil. Ta ütles: „Muidugi.““" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii aus, et Truuse hakkas teda nähes tõtt rääkima.“" }] }
+      ] }] },
+      { "label": "Viska talle ise üks su ema nali", "next": "ets", "do": [{ "time": 2 }, { "met": "ets" },
+        { "chance": 0.35, "then": [{ "aff": { "ets": 2 } }, { "problem": -8 }, { "say": "Ets naerab nii, et peab seina vastu toetuma. „Okei. OKEI. See oli hea.“" }],
+                          "else": [{ "problem": 4 }, { "say": "Ets vastab kohe kolmega. Igaüks on parem kui sinu oma. Sa kaotasid." }] }] },
+      { "label": "Kõnni edasi", "do": [{ "add": { "ets_count": 1 } }, { "met": "ets" }, { "say": "Ets hüüab sulle järele veel ühe kiisunalja. See on hea. Kahjuks." }] }
+    ]
+  },
+
+  // ================================================================ JANNO JA ANDRE
+  {
+    "id": "janno", "speaker": "JANNO JA ANDRE",
+    "on_enter": [{ "task_add": "casino_up" }],
+    "text": "Janno, kõige toredam poiss Tartus, särab nagu oleks just loterii võitnud. „Me läheme Andrega kasiinosse! Täna on MEIE öö! Tule ka!“ Andre tõmbab jope luku kinni nagu läheks sõtta.",
+    "choices": [
+      { "label": "Lähme kasiinosse!", "next": "casino", "do": [{ "time": 10 }, { "met": ["janno", "andre"] }, { "set": { "casino_net": 0 } }, { "flag": "went_casino" }] },
+      { "label": "Anna Jannole high five ja soovi edu", "do": [{ "problem": -8 }, { "aff": { "janno": 1 } }, { "say": "Janno annab sulle nii kõva viie, et käsi kipitab. „SA OLED PARIM! Me toome sulle midagi!“ Nad ei too sulle midagi." }] },
+      { "label": "„Poisid, maja võidab alati“", "do": [{ "met": ["janno", "andre"] }, { "say": "Janno: „Mitte täna!“ Andre, vaikselt: „Ta ütleb seda iga reede.“ Janno: „Ja iga reede on mul õigus!“ Tal pole kunagi õigus olnud." }] }
+    ]
+  },
+  {
+    "id": "casino", "speaker": "JANNO JA ANDRE",
+    "text": "Kasiino. Vaip on täpselt nii kole, nagu lootsid. Janno hõiskab iga ruletipalli peale, olgu see kuhu tahes kukkunud. Andre loeb oma žetoone juba kolmandat korda.",
+    "choices": [
+      { "label": "Pane 10 € punasele", "if": [{ "var": "money", ">=": 10 }], "locked": "Raha ei jätku", "next": "casino",
+        "do": [{ "time": 5 }, { "random": [
+          { "weight": 47, "do": [{ "money": 10 }, { "add": { "casino_net": 10 } }, { "problem": 5 }, { "say": "PUNANE! Janno tõstab su õhku. Andre kirjutab midagi märkmikusse." }] },
+          { "weight": 53, "do": [{ "money": -10 }, { "add": { "casino_net": -10 } }, { "say": "Must. Janno: „Järgmine kord kindlasti!“ Ta on jätkuvalt väga heas tujus." }] }
+        ] }] },
+      { "label": "Pane 10 € mustale", "if": [{ "var": "money", ">=": 10 }], "locked": "Raha ei jätku", "next": "casino",
+        "do": [{ "time": 5 }, { "random": [
+          { "weight": 47, "do": [{ "money": 10 }, { "add": { "casino_net": 10 } }, { "problem": 5 }, { "say": "MUST! Janno kallistab võhivõõrast. Võõras kallistab vastu." }] },
+          { "weight": 53, "do": [{ "money": -10 }, { "add": { "casino_net": -10 } }, { "say": "Punane. Andre: „Statistiliselt oli see oodatav.“ Janno: „ANDRE, ÄRA RIKU VAIBI!“" }] }
+        ] }] },
+      { "label": "Pane 20 € Janno õnnenumbrile 7", "if": [{ "var": "money", ">=": 20 }], "locked": "Raha ei jätku", "next": "casino",
+        "do": [{ "time": 5 }, { "random": [
+          { "weight": 4, "do": [{ "money": 200 }, { "flag": "casino_seven" }, { "add": { "casino_net": 200 } }, { "log": "Võitsid kasiinos numbriga 7 kakssada eurot. Janno nuttis." }, { "say": "SEITSE. SEITSE!! Janno nutab. Andre istub maha. Kogu laud plaksutab. Sa võitsid 200 eurot." }] },
+          { "weight": 96, "do": [{ "money": -20 }, { "add": { "casino_net": -20 } }, { "say": "Kolmteist. Janno: „Seitse oli lähedal! Kolmteist on peaaegu seitse!“ Ei ole." }] }
+        ] }] },
+      { "label": "Mine Jannoga mänguautomaatide juurde", "next": "casino",
+        "do": [{ "time": 20 }, { "money": -5 }, { "add": { "casino_net": -5 } }, { "problem": -5 }, { "aff": { "janno": 1 } },
+               { "say": "Kakskümmend minutit vilkuvaid tulesid. Janno võidab kaks eurot ja tähistab nagu oleks võitnud maja." }] },
+      { "label": "Lahku kasiinost plussis", "show_if": [{ "var": "casino_net", ">": 0 }],
+        "do": [{ "flag": "casino_up" }, { "aff": { "janno": 1 } }, { "log": "Lahkusid kasiinost plussis. Janno ja Andre jäid edasi." },
+               { "say": "Sa lahkud võitjana. Janno hõiskab sulle järele: „VÕITJA!“ Andre noogutab tunnustavalt." }] },
+      { "label": "Lahku kasiinost", "show_if": [{ "var": "casino_net", "<=": 0 }],
+        "do": [{ "log": "Käisid Janno ja Andrega kasiinos. Maja võitis." }, { "say": "Janno kallistab sind hüvastijätuks. „Järgmine reede!“ Andre: „Järgmine reede.“" }] }
+    ]
+  },
+
+  // ================================================================ JAAN
+  {
+    "id": "call_jaan", "speaker": "JAAN (TELEFON)",
+    "redirect": { "if": [{ "after": "03:00" }], "to": "call_jaan_asleep" },
+    "text": "Jaan vastab esimese kutsega, täiesti kaine häälega. „Tere! Hea, et helistasid. Ma just mõtlesin ühe asja peale. Kas sa teadsid, et...“",
+    "choices": [
+      { "label": "„Räägi mulle tuumafüüsikast.“",
+        "do": [{ "time": [120, 180] }, { "phone": -12 }, { "problem": -35 }, { "flag": "nuclear_talk" }, { "aff": { "jaan": 3 } },
+               { "log": "Rääkisid Jaaniga telefonis {time} minutit tuumafüüsikast. Sa tead nüüd, mis on ristlõige." },
+               { "say": "{time} minutit hiljem tead ahelreaktsioonidest rohkem kui keegi teine Rüütlil. Telefon on kuum. Pea on selge. Kell on palju." }] },
+      { "label": "„Räägi mõni lahe füüsikafakt.“", "next": "call_jaan", "do": [{ "time": 3 }, { "phone": -2 }, { "problem": -4 }, { "met": "jaan" }, { "random": [{"do": [{"say": "Jaan: „Iga sekund läheb sinu pöidlaküünest läbi umbes 65 miljardit Päikeselt tulnud neutriinot. Nad ei tee sulle midagi. Nad lihtsalt lähevad läbi. Nagu Ain baarist.“"}]}, {"do": [{"say": "Jaan: „Päikesevalgus, mida sa homme hommikul näed, lahkus Päikeselt umbes kaheksa minutit ja kakskümmend sekundit varem. Päikesetõus on sisuliselt kordus.“"}]}, {"do": [{"say": "Jaan: „Banaanid on natuke radioaktiivsed, kaalium-40 pärast. Sa peaksid sööma umbes kümme miljonit korraga, et see ohtlik oleks. Ära proovi.“"}]}, {"do": [{"say": "Jaan: „Teelusikatäis neutrontähe ainet kaalub umbes miljard tonni. See on nagu HASi kebab, aga hullem.“"}]}, {"do": [{"say": "Jaan: „GPS-satelliitide kellad lähevad relatiivsusteooria tõttu iga päev umbes 38 mikrosekundit ette. Kui seda ei parandaks, oleks Bolt iga päevaga mitu kilomeetrit mööda.“"}]}, {"do": [{"say": "Jaan: „Aatom on peaaegu täiesti tühi. Kui tuum oleks hernetera, oleks aatom staadioni suurune. Sina oled ka peamiselt tühjus. Ära võta seda isiklikult.“"}]}, {"do": [{"say": "Jaan: „Vesi paisub külmudes umbes üheksa protsenti. Seepärast lõhkevad õllepudelid sügavkülmas. Ma tean, et sa oled seda katsetanud.“"}]}, {"do": [{"say": "Jaan: „Päike ei tohiks klassikalise füüsika järgi üldse põleda. Prootonid tõukuvad liiga tugevalt. Ta põleb ainult kvanttunneldumise pärast. Põhimõtteliselt petab.“"}]}, {"do": [{"say": "Jaan: „Kosmilistest kiirtest tekkinud müüonid ei peaks maapinnani jõudma, nad lagunevad liiga kiiresti. Aga nende aeg aeglustub. Nad jõuavad. Nagu sina koju. Loodetavasti.“"}]}, {"do": [{"say": "Jaan: „Absoluutne null on miinus 273,15 kraadi. Kaubamaja parkla kell kuus hommikul on lähedal.“"}]}] }] },
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "jaan" }], "next": "call_jaan_2" },
+      { "label": "„Tule siia, räägime näost näkku.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "jaan", "chance": 0.6 } }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "jaan" }, { "say": "Jaan: „Okei! Kui tahad tuumafüüsikast rääkida, olen kella kolmeni üleval.“" }] }
+    ]
+  },
+  {
+    "id": "call_jaan_2", "speaker": "JAAN (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "jaan" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "jaan", "chance": 0.6 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "call_jaan_asleep", "speaker": "JAAN (TELEFON)",
+    "text": "Kutsub... kutsub... kutsub. Jaan ei vasta. Jaan magab. Jaan läheb alati kell kolm magama, isegi reedel. Eriti reedel.",
+    "choices": [{ "label": "Okei", "do": [{ "met": "jaan" }] }]
+  },
+  {
+    "id": "jaan_meet", "speaker": "JAAN",
+    "redirect": { "if": [{ "after": "03:00" }], "to": "jaan_gone" },
+    "text": "Jaan seisab nurgas klaasi veega ja vaatab rahvast nagu loodusdokumentaali. Ta rõõmustab sind nähes siiralt.",
+    "choices": [
+      { "label": "Räägi temaga tuumafüüsikast",
+        "do": [{ "time": [90, 150] }, { "problem": -30 }, { "flag": "nuclear_talk" }, { "aff": { "jaan": 3 } },
+               { "log": "Rääkisid Jaaniga {time} minutit tuumafüüsikast. Ümberringi käis pidu. Sa ei märganud." },
+               { "say": "Jaan joonistab salvrätile neutroni. Siis veel ühe. {time} minutit hiljem on salvrätte kakskümmend ja sa saad aru asjadest, millest sa ei tahtnudki aru saada." }] },
+      { "label": "„Mis sul praegu peas on?“", "next": "jaan_meet", "do": [{ "time": 5 }, { "problem": -5 }, { "aff": { "jaan": 1 } }, { "random": [{"do": [{"say": "Jaan: „Iga sekund läheb sinu pöidlaküünest läbi umbes 65 miljardit Päikeselt tulnud neutriinot. Nad ei tee sulle midagi. Nad lihtsalt lähevad läbi. Nagu Ain baarist.“"}]}, {"do": [{"say": "Jaan: „Päikesevalgus, mida sa homme hommikul näed, lahkus Päikeselt umbes kaheksa minutit ja kakskümmend sekundit varem. Päikesetõus on sisuliselt kordus.“"}]}, {"do": [{"say": "Jaan: „Banaanid on natuke radioaktiivsed, kaalium-40 pärast. Sa peaksid sööma umbes kümme miljonit korraga, et see ohtlik oleks. Ära proovi.“"}]}, {"do": [{"say": "Jaan: „Teelusikatäis neutrontähe ainet kaalub umbes miljard tonni. See on nagu HASi kebab, aga hullem.“"}]}, {"do": [{"say": "Jaan: „GPS-satelliitide kellad lähevad relatiivsusteooria tõttu iga päev umbes 38 mikrosekundit ette. Kui seda ei parandaks, oleks Bolt iga päevaga mitu kilomeetrit mööda.“"}]}, {"do": [{"say": "Jaan: „Aatom on peaaegu täiesti tühi. Kui tuum oleks hernetera, oleks aatom staadioni suurune. Sina oled ka peamiselt tühjus. Ära võta seda isiklikult.“"}]}, {"do": [{"say": "Jaan: „Vesi paisub külmudes umbes üheksa protsenti. Seepärast lõhkevad õllepudelid sügavkülmas. Ma tean, et sa oled seda katsetanud.“"}]}, {"do": [{"say": "Jaan: „Päike ei tohiks klassikalise füüsika järgi üldse põleda. Prootonid tõukuvad liiga tugevalt. Ta põleb ainult kvanttunneldumise pärast. Põhimõtteliselt petab.“"}]}, {"do": [{"say": "Jaan: „Kosmilistest kiirtest tekkinud müüonid ei peaks maapinnani jõudma, nad lagunevad liiga kiiresti. Aga nende aeg aeglustub. Nad jõuavad. Nagu sina koju. Loodetavasti.“"}]}, {"do": [{"say": "Jaan: „Absoluutne null on miinus 273,15 kraadi. Kaubamaja parkla kell kuus hommikul on lähedal.“"}]}] }] },
+      { "label": "Küsi, miks ta vett joob", "do": [{ "problem": -5 }, { "met": "jaan" }, { "say": "„Hüdratatsioon on ainus asi universumis, mis on tõeliselt stabiilne.“" }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "jaan" }] }
+    ]
+  },
+  {
+    "id": "jaan_gone", "speaker": "",
+    "text": "Jaani siin enam ei ole. Kell sai kolm. Jaan läks koju. Jaan läheb alati.",
+    "choices": [{ "label": "Okei" }]
+  },
+
+  // ================================================================ ETS JA JANNO: TELEFON
+  {
+    "id": "call_ets", "speaker": "ETS (TELEFON)",
+    "text": "Ets vastab enne, kui kutse jõuab üldse kosta: „Halloo, kas see on kiisupolitsei? Mul on teile üks nali.“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "ets" }], "next": "call_ets_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "ets", "chance": 0.6 } }] },
+      { "label": "„Okei, räägi see nali ära.“", "do": [{ "time": 2 }, { "phone": -2 }, { "problem": -4 }, { "met": "ets" }, { "random": [
+        { "do": [{ "say": "Ets: „Mis kass ütleb, kui telefon heliseb? Mjäu-lo?“ Ta naerab ise nii kõvasti, et pillab telefoni maha." }] },
+        { "do": [{ "say": "Ets: „Su ema helistas mulle enne sind. Tal oli parem nali.“" }] },
+        { "do": [{ "say": "Ets: „Miks kass telefoni ei vasta? Ta ootab, et sa ise tuled.“ Paus. „Nagu mina praegu.“" }] },
+        { "do": [{ "say": "Ets: „Su ema on nii populaarne, et tal on Boltis oma kategooria.“" }] }
+      ] }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "ets" }, { "say": "Ets: „Mitte midagi on ka nali. Kõige parem.“ Ta paneb toru ära ja on endaga rahul." }] }
+    ]
+  },
+  {
+    "id": "call_ets_2", "speaker": "ETS (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "ets" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "ets", "chance": 0.6 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "call_janno", "speaker": "JANNO (TELEFON)",
+    "text": "Janno vastab nii rõõmsalt, et telefon hakkab peos värisema: „BROOO! Me oleme Andrega praegu TÄIESTI vormis! Full send!“ Taustal ütleb Andre: „Me ei ole.“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "janno" }], "next": "call_janno_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "janno", "chance": 0.7 } }] },
+      { "label": "„Kuidas kasiinos läheb?“", "do": [{ "time": 3 }, { "phone": -2 }, { "problem": -4 }, { "met": "janno" }, { "random": [
+        { "do": [{ "say": "Janno: „SUPER! Me oleme miinuses, aga emotsionaalselt plussis!“" }] },
+        { "do": [{ "say": "Janno: „Andre arvutas välja süsteemi!“ Andre: „Ma arvutasin välja, et süsteemi ei ole.“" }] },
+        { "do": [{ "say": "Janno: „Me pole veel läinudki! Aga me läheme! Ma tunnen seda!“" }] }
+      ] }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "janno" }, { "say": "Janno: „Okei! Love you, mees!“ Ta ütleb seda kõigile. Ta mõtleb seda iga kord." }] }
+    ]
+  },
+  {
+    "id": "call_janno_2", "speaker": "JANNO (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "janno" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "janno", "chance": 0.7 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "in_ets", "speaker": "ETS HELISTAB",
+    "text": "Telefon vibreerib. Ets: „Mis on kassi lemmikrakendus? Mjäu-ps. Okei, see oli kõik. Aga kus sa oled?“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "ets": 1 } }, { "summon_friend": { "who": "ets", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "ets" }] },
+      { "label": "Pane toru ära", "do": [{ "aff": { "ets": -1 } }, { "say": "Ta saadab sulle kohe järgmise nalja sõnumiga. Seegi on kiisunali." }] }
+    ]
+  },
+  {
+    "id": "in_janno", "speaker": "JANNO HELISTAB",
+    "on_enter": [{ "task_add": "casino_up" }],
+    "text": "Telefon vibreerib. Janno: „BROOO! Kasiino ootab! Kus sa oled? Me tuleme sulle järele!“ Andre taustal: „Meie?“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "janno": 1 } }, { "summon_friend": { "who": "janno", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise nende juurde", "do": [{ "phone": -1 }, { "goto_friend": "janno" }] },
+      { "label": "„Täna mitte, Janno.“", "do": [{ "aff": { "janno": -1 } }, { "say": "Janno: „Okei! Järgmine kord!“ Ta pole sinu peale kunagi pahane. See teeb asja hullemaks." }] }
+    ]
+  },
+  {
+    "id": "janno_back", "speaker": "JANNO JA ANDRE",
+    "on_enter": [{ "task_add": "casino_up" }],
+    "text": "Janno ja Andre. Janno on endiselt kõige paremas tujus terves Tartus. Andre hoiab käes tühja rahakotti nagu mälestusmärki.",
+    "choices": [
+      { "label": "„Lähme veel üks kord kasiinosse!“", "show_if": [{ "before": "05:00" }], "next": "casino",
+        "do": [{ "time": 10 }, { "met": ["janno", "andre"] }, { "set": { "casino_net": 0 } }, { "flag": "went_casino" }] },
+      { "label": "Küsi, kuidas läks", "do": [{ "met": ["janno", "andre"] }, { "problem": -4 }, { "random": [
+        { "do": [{ "say": "Janno: „Me võitsime!“ Andre: „Me võitsime kaks korda ja kaotasime üheksa.“ Janno: „Me VÕITSIME kaks korda!“" }] },
+        { "do": [{ "say": "Janno: „Maja võitis, aga meie võitsime moraalselt.“ Andre noogutab väsinult. Moraalne võit maksab 40 eurot." }] }
+      ] }] },
+      { "label": "Kalli Jannot", "do": [{ "problem": -8 }, { "aff": { "janno": 1 } }, { "say": "Janno kallistab tagasi nii, et selg ragiseb. Andre kallistab ka, aga kohmetult ja natukene eemalt." }] },
+      { "label": "Mine edasi", "do": [{ "met": ["janno", "andre"] }] }
+    ]
+  },
+
+  // ================================================================ SÕPRADE GRUPID: kindlad paarid
+  {
+    "id": "g_ain_jasper", "speaker": "AIN JA JASPER", "portrait": "@group",
+    "on_enter": [{ "flag": "ain_money_known" }],
+    "text": "Jasper on Aini nurka surunud. Jasper: „Ain. Sa oled täna ostnud üksteist ringi. Kust see raha tuleb?“ Ain: „Ma lihtsalt... leian seda.“ Mõlemad vaatavad sind.",
+    "choices": [
+      { "label": "„Ain, näita rahakotti.“", "do": [{ "time": 5 }, { "problem": -6 }, { "aff": { "ain": 1, "jasper": 1 } },
+        { "say": "Ain avab rahakoti. Seal on täpselt 20 eurot ja 2014. aasta Maxima tšekk. Ta ostab ringi. Rahakotis on ikka 20 eurot. Jasper vaatab seda pikalt ja vaikselt." }] },
+      { "label": "Toeta Jasperit: „See on kahtlane.“", "do": [{ "aff": { "jasper": 2, "ain": -1 } },
+        { "say": "Jasper: „AITÄH.“ Ain solvub, aga lühidalt. Ain ei suuda kaua solvunud olla, sest ta peab kohe uue ringi tooma." }] },
+      { "label": "„Ain, too parem ring.“", "do": [{ "time": 10 }, { "problem": -10 }, { "add": { "drinks": 1 } }, { "aff": { "ain": 1, "jasper": -1 } },
+        { "say": "Ain toob kolm õlut. Keegi ei näinud teda maksmas. Jasper joob oma õlle ära, aga protesti märgiks väga aeglaselt." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }, { "say": "Lahkudes kuuled Jasperit: „...aga MILLAL sa viimati pangas käisid?“" }] }
+    ]
+  },
+  {
+    "id": "g_martin_tristan", "speaker": "MARTIN JA TRISTAN", "portrait": "@group",
+    "text": "Martin ja Tristan sosistavad. Martin: „Rüütli tänava otsas on liikluskoonus. Oranž. Ilus.“ Tristan: „Ta on üksi. Keegi peab ta koju viima.“ Nad vaatavad sind nagu oleksid sina see keegi.",
+    "choices": [
+      { "label": "„Olen sees.“", "do": [{ "time": 15 }, { "chance": 0.6,
+        "then": [{ "item": "cone" }, { "task_add": "cone_home" }, { "problem": -10 }, { "aff": { "martin": 2, "tristan": 2 } }, { "log": "Varastasid Martini ja Tristaniga liikluskoonuse. Ta on nüüd sinu oma." },
+                 { "say": "Operatsioon õnnestub. Sa kõnnid nüüd ringi oranži koonusega. Martin nimetab ta Kalleks. Tristan nutab natuke." }],
+        "else": [{ "problem": 18 }, { "aff": { "martin": 1, "tristan": 1 } },
+                 { "say": "Kuskilt kostab vile. Te jooksete kolmekesi minema. Tristan kaotab ühe tossu. Koonus jääb oma kohale, üksi ja reedetuna." }] }] },
+      { "label": "„Poisid, see on halb mõte.“", "do": [{ "problem": -3 }, { "aff": { "martin": -1, "tristan": -1 } },
+        { "say": "Martin: „Kõik head mõtted on alguses halvad.“ Tristan noogutab tõsiselt. Nad lähevad ilma sinuta." }] },
+      { "label": "„Ma filmin.“", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "time": 10 }, { "phone": -5 }, { "aff": { "martin": 1, "tristan": 1 } }, { "log": "Filmisid, kuidas Martin ja Tristan koonust varastasid. Video on 4 minutit ja täiesti pime." },
+               { "say": "Video on neli minutit pikk. Pildil on ainult pimedus ja Tristani hingeldamine. Martin ütleb, et see on kunst." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_ets_jasper", "speaker": "ETS JA JASPER", "portrait": "@group",
+    "text": "Ets räägib Jasperile kiisunalja. Jasper ei naera. Jasper mõtleb. „Aga mida see nali ütleb kassi kohta... kui inimese kohta?“ Ets vaatab sind abi otsides.",
+    "choices": [
+      { "label": "Naera Etsi nalja üle", "do": [{ "problem": -5 }, { "aff": { "ets": 2, "jasper": -1 } },
+        { "say": "Ets osutab sulle: „NÄED? Normaalne inimene NAERAB.“ Jasper ohkab nagu oleks kogu põlvkond ta maha jätnud." }] },
+      { "label": "„Jasperil on õigus. Kass on metafoor.“", "do": [{ "time": 15 }, { "problem": -8 }, { "aff": { "jasper": 2, "ets": -1 } },
+        { "say": "Te räägite viisteist minutit sellest, kas kass on vaba. Ets lahkub ja tuleb tagasi uue naljaga. Sellest saab samuti metafoor." }] },
+      { "label": "„Teeme sellest laulu.“", "do": [{ "time": 20 }, { "problem": -12 }, { "aff": { "jasper": 1, "ets": 1 } },
+        { "log": "Kirjutasid Etsi ja Jasperiga laulu „Mjäu-hito (filosoofiline)“." },
+        { "say": "Jasper kirjutab viisi, Ets kirjutab sõnad, sina plaksutad. Laul kannab nime „Mjäu-hito (filosoofiline)“. Baarman palub teil lõpetada." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_truuse_jaan", "speaker": "TRUUSE JA JAAN", "portrait": "@group",
+    "text": "Truuse: „Emajõgi voolab teisipäeviti tagurpidi.“ Jaan, rahulikult ja veeklaas käes: „See on hüdrodünaamiliselt võimatu. Aga ma kuulan. Mis on sinu andmestik?“ Truuse pole kunagi elus nii tõsiselt võetud olnud.",
+    "choices": [
+      { "label": "Ole Truuse poolt", "do": [{ "aff": { "truuse": 2, "jaan": -1 } },
+        { "say": "Jaan: „Huvitav. Kaks inimest ühe hüpoteesi taga.“ Ta kirjutab midagi salvrätile. Truuse on liigutatud." }] },
+      { "label": "Ole Jaani poolt", "do": [{ "aff": { "jaan": 2, "truuse": -1 } },
+        { "say": "Truuse: „Te olete mõlemad süsteemi osa.“ Jaan: „Me kõik oleme süsteemi osa. Täpsemalt termodünaamilise süsteemi.“" }] },
+      { "label": "Lase neil vaielda ja kuula", "do": [{ "time": [40, 60] }, { "problem": -18 }, { "aff": { "truuse": 1, "jaan": 1 } },
+        { "log": "Kuulasid {time} minutit, kuidas Jaan ja Truuse Emajõe voolusuunda arutasid." },
+        { "say": "{time} minutit hiljem on salvrätile joonistatud jõgi, neli noolt ja üks hobune. Kokkuleppele ei jõutud, aga mõlemad on õnnelikud." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_janno_ain", "speaker": "JANNO JA AIN", "portrait": "@group",
+    "on_enter": [{ "task_add": "casino_up" }, { "flag": "ain_money_known" }],
+    "text": "Janno hoiab Ainil õlast: „Ain. Sul ei saa kunagi raha otsa. Mina armastan kasiinot. See on saatus.“ Ain kaalub seda. Andre seisab taamal ja raputab pead.",
+    "choices": [
+      { "label": "„Lähme kõik kasiinosse!“", "show_if": [{ "before": "05:00" }], "next": "casino",
+        "do": [{ "time": 10 }, { "aff": { "ain": 1, "janno": 1 } }, { "met": ["janno", "andre", "ain"] }, { "set": { "casino_net": 0 } }, { "flag": "went_casino" },
+               { "say": "Ain tuleb kaasa. Juba uksel ostab ta kõigile žetoone. Kust? Ei tea keegi." }] },
+      { "label": "„Ain, ära mine.“", "do": [{ "aff": { "ain": 1, "janno": -1 } },
+        { "say": "Ain: „Sul on õigus.“ Janno: „Sul EI OLE õigus!“ Andre, vaikselt: „Tal on õigus.“" }] },
+      { "label": "Küsi Ainilt kümme eurot", "do": [{ "money": 10 }, { "aff": { "ain": -1 } },
+        { "say": "Ain annab kümme eurot ega küsi neid kunagi tagasi. Ta ei mäleta seda. Rahakotis on tal endiselt täpselt 20 eurot." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_martin_ets", "speaker": "MARTIN JA ETS", "portrait": "@group",
+    "text": "Martin ja Ets on keset su ema naljade duelli. Skoor on 7:7. Martin: „Su ema on nii...“ Ets: „Mul on parem.“ Nad pöörduvad sinu poole. „Sina oled kohtunik.“",
+    "choices": [
+      { "label": "„Martin võitis.“", "do": [{ "aff": { "martin": 2, "ets": -1 } },
+        { "say": "Martin tõstab käed nagu oleks kuldmedali saanud. Ets nõuab kordusmängu. Seda ei tule." }] },
+      { "label": "„Ets võitis.“", "do": [{ "aff": { "ets": 2, "martin": -1 } },
+        { "say": "Ets kummardab. Martin ütleb, et kohtunik on ostetud. Tal pole selle kohta tõendeid, aga hääletoon on veenev." }] },
+      { "label": "Viska ise üks su ema nali", "do": [{ "time": 3 }, { "chance": 0.4,
+        "then": [{ "problem": -12 }, { "aff": { "martin": 1, "ets": 1 } }, { "say": "Vaikus. Siis naeravad mõlemad. Ets: „Okei. See oli hea.“ Martin: „Ta võttis selle minult.“ Ei võtnud." }],
+        "else": [{ "problem": 6 }, { "say": "Mõlemad pöörduvad sinu vastu. Kaks ühe vastu. Su ema saab järgmise viie minuti jooksul kõvasti." }] }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_tristan_janno", "speaker": "TRISTAN JA JANNO", "portrait": "@group",
+    "on_enter": [{ "task_add": "casino_up" }],
+    "text": "Tristan näitab Jannole pakki Westoneid. Janno särab: „Westonid ja kasiino! Tristan, see on parim plaan, mis kunagi on olnud!“ See ei ole parim plaan.",
+    "choices": [
+      { "label": "Võta üks Weston", "do": [{ "chance": { "var": "problem", "from": 30, "to": 100, "min": 0.15, "max": 0.8 },
+        "then": [{ "log": "Võtsid Tristani ja Janno seltsis ühe Westoni." }, { "blackout": true }],
+        "else": [{ "add": { "drinks": 1 } }, { "problem": -10 }, { "aff": { "tristan": 2, "janno": 1 } }, { "say": "Üks Weston. Maailm läheb korraks pehmeks. Janno ütleb, et sa näed välja nagu õnnelik kass." }] }] },
+      { "label": "„Lähme kasiinosse!“", "show_if": [{ "before": "05:00" }], "next": "casino",
+        "do": [{ "time": 10 }, { "aff": { "tristan": 1, "janno": 1 } }, { "met": ["janno", "andre", "tristan"] }, { "set": { "casino_net": 0 } }, { "flag": "went_casino" }] },
+      { "label": "Korja Tristanilt Westonid ära", "do": [{ "aff": { "tristan": -2, "janno": 1 } }, { "problem": -4 },
+        { "say": "Tristan annab paki käest nagu kass, kellelt võetakse hiir. Janno: „Vastutustundlik! Sulle meeldib vastutus!“" }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_jasper_jaan", "speaker": "JASPER JA JAAN", "portrait": "@group",
+    "text": "Jasper: „Kas universum on lõpmatu?“ Jaan: „Sõltub, mida sa mõtled lõpmatuse all.“ Jasper: „Ma mõtlen... tunnet.“ Jaan paneb veeklaasi lauale. See on alles algus.",
+    "choices": [
+      { "label": "Löö kaasa", "do": [{ "time": [60, 90] }, { "problem": -25 }, { "aff": { "jasper": 2, "jaan": 2 } },
+        { "log": "Arutasid Jasperi ja Jaaniga {time} minutit universumi lõpmatust." },
+        { "say": "{time} minutit hiljem on Jasper nutnud kaks korda ja Jaan on joonistanud valguskoonuse. Sa ei tea enam, mis kell on. Universum on lõpmatu. Või mitte." }] },
+      { "label": "Suuna jutt tuumafüüsikale", "do": [{ "time": [90, 120] }, { "problem": -30 }, { "flag": "nuclear_talk" }, { "aff": { "jaan": 3, "jasper": -1 } },
+        { "log": "Rääkisid Jaaniga {time} minutit tuumafüüsikast. Jasper jäi magama." },
+        { "say": "Jaan särab. Jasper jääb kolmanda ristlõike juures istudes magama. {time} minutit hiljem tead, mis on neutronite aeglustamine. Elu ei ole enam endine." }] },
+      { "label": "„Poisid, on reede õhtu.“", "do": [{ "aff": { "jasper": -1 } }, { "problem": 3 },
+        { "say": "Jaan: „Reede on samuti aegruumi osa.“ Jasper: „Ilus.“ Sa kaotasid." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_ain_martin", "speaker": "AIN JA MARTIN", "portrait": "@group",
+    "on_enter": [{ "flag": "ain_money_known" }],
+    "text": "Martin küsib Ainilt laenu. Ain annab. Martin küsib uuesti. Ain annab uuesti. Siis pöörab Martin pea sinu poole: „Chief. Sul on ju ka?“",
+    "choices": [
+      { "label": "Anna Martinile 5 €", "if": [{ "var": "money", ">=": 5 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -5 }, { "aff": { "martin": 2 } }, { "flag": "lent_martin" }, { "task_add": "martin_payback" }, { "say": "Martin: „Annan homme tagasi.“ Ain ja sina vaatate teineteisele otsa. Te teate." }] },
+      { "label": "„Ain, ta ei maksa sulle kunagi tagasi.“", "do": [{ "aff": { "ain": 1, "martin": -2 } },
+        { "say": "Ain kehitab õlgu: „Mul pole vahet. Raha tuleb tagasi.“ Keegi ei tea, kust. Martin vaatab sind nagu reeturit." }] },
+      { "label": "Küsi ka ise Ainilt", "do": [{ "money": 5 }, { "aff": { "martin": 1 } },
+        { "say": "Ain annab ka sulle viis eurot. Martin tõstab käe high five'iks. Ain ei saa aru, miks ta tunneb end korraga hästi ja halvasti." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_truuse_ets", "speaker": "TRUUSE JA ETS", "portrait": "@group",
+    "text": "Truuse ja Ets peavad võistlust: kes räägib kõige uskumatuma loo. Ets räägib nalju. Truuse väidab, et tema räägib ainult tõtt. Skoor on viik.",
+    "choices": [
+      { "label": "„Truuse võitis.“", "do": [{ "aff": { "truuse": 2, "ets": -1 } },
+        { "say": "Truuse: „Sest see kõik on tõsi.“ Ets: „Ka see hobune?“ Truuse: „ERITI see hobune.“" }] },
+      { "label": "„Ets võitis.“", "do": [{ "aff": { "ets": 2, "truuse": -1 } },
+        { "say": "Ets kummardab. Truuse ütleb, et Etsi naljad on varastatud. Kahjuks on see tõsi." }] },
+      { "label": "Räägi ise kõige uskumatum lugu", "do": [{ "time": 10 }, { "chance": 0.5,
+        "then": [{ "problem": -12 }, { "aff": { "truuse": 1, "ets": 1 } }, { "log": "Võitsid Truuse ja Etsiga valelugude võistluse." },
+                 { "say": "Sinu lugu Toomemäe kummitusest ja Bolti juhist ajab mõlemad vaikseks. Truuse: „Ma usun seda.“ Ets: „Mina ka. Kahjuks.“" }],
+        "else": [{ "problem": 5 }, { "say": "Truuse: „Liiga usutav.“ Ets: „Liiga igav.“ Sa kaotasid mõlemale korraga." }] }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_janno_jasper", "speaker": "JANNO JA JASPER", "portrait": "@group",
+    "text": "Janno tahab, et Jasper kirjutaks kasiinole hümni. Jasper on sellega juba nõus. Tal on pealkiri olemas: „Maja võidab (aga meie ka)“.",
+    "choices": [
+      { "label": "Laula kaasa", "do": [{ "time": 10 }, { "problem": -10 }, { "aff": { "janno": 1, "jasper": 1 } },
+        { "log": "Laulsid Janno ja Jasperiga kasiinohümni. Kolm salmi, null ilusat nooti." },
+        { "say": "Kolm salmi. Refrään on lihtsalt „PUNANE!“ korduvalt. Pool baari laulab lõpuks kaasa." }] },
+      { "label": "„Kirjutan ühe salmi: maja võidab alati.“", "do": [{ "aff": { "jasper": 1, "janno": -1 } },
+        { "say": "Jasper: „Ausus. Mulle meeldib.“ Janno on korraks kurb. Ainult korraks. Siis on ta jälle õnnelik." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_tristan_truuse", "speaker": "TRISTAN JA TRUUSE", "portrait": "@group",
+    "text": "Truuse seletab Tristanile, et Westonid tehakse Kalevipoja (hobuse) heinast. Tristan kuulab suurte silmadega. Tristan usub. Tristan usub alati.",
+    "choices": [
+      { "label": "Kinnita Truuse lugu", "do": [{ "problem": 5 }, { "aff": { "truuse": 2, "tristan": 1 } },
+        { "say": "Tristan: „Ma teadsin. Ma TEADSIN, et neis on midagi looduslikku.“ Truuse noogutab nagu teadlane." }] },
+      { "label": "„Tristan, ta mõtleb selle välja.“", "do": [{ "aff": { "tristan": 1, "truuse": -2 } },
+        { "say": "Truuse: „Kõik suured tõed tunduvad alguses välja mõeldud.“ Tristan on nüüd kahe tõe vahel lõhki." }] },
+      { "label": "Osta mõlemale vett (3 €)", "if": [{ "var": "money", ">=": 3 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -3 }, { "problem": -6 }, { "aff": { "tristan": 1, "truuse": 1 } },
+               { "say": "Vesi. Hüdratatsioon. Kuskil kaugel tunneb Jaan väikest uhkust." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+
+  // ================================================================ SÕPRADE GRUPID: ükskõik kes ({a}, {b})
+  {
+    "id": "g_kebab", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} ja {b} vaidlevad, kas HASi kebab on Tartu parim toit või inimõiguste rikkumine. {a}: „Parim.“ {b}: „Rikkumine.“ Vaidlus kestab juba kakskümmend minutit ja läheb aina isiklikumaks.",
+    "choices": [
+      { "label": "Ole {a_gen} poolt", "do": [{ "aff": { "@a": 2, "@b": -1 } }, { "say": "{a} kallistab sind. {b} ütleb, et teie maitsemeel on sama halb." }] },
+      { "label": "Ole {b_gen} poolt", "do": [{ "aff": { "@b": 2, "@a": -1 } }, { "say": "{b} lööb sulle patsu. {a} läheb demonstratiivselt kebabi järgi." }] },
+      { "label": "„Mõlemad on halvad.“", "do": [{ "problem": -4 }, { "aff": { "@group": -1 } }, { "say": "Nüüd on {a} ja {b} esimest korda täna ühel meelel. Sinu vastu." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_plan", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} tahab, et kõik läheksid kell neli Toomemäele päikesetõusu vaatama. {b}: „Päike tõuseb kell kuus.“ {a}: „Siis me ootame. Ilusasti.“",
+    "choices": [
+      { "label": "„Plaan on hea!“", "do": [{ "aff": { "@a": 2 } }, { "say": "{a} on liigutatud. {b} ütleb, et tuleb ka, aga ainult selleks, et öelda „ma ju ütlesin“." }] },
+      { "label": "„{b} on õigus.“", "do": [{ "aff": { "@b": 2, "@a": -1 } }, { "say": "{b}: „Aitäh.“ {a} vaatab taevasse ja ütleb, et päike on niikuinii üle hinnatud." }] },
+      { "label": "„Lähme kohe Toomemäele!“", "do": [{ "time": 12 }, { "problem": -8 }, { "aff": { "@group": 1 } }, { "goto": "toomemagi" },
+        { "log": "Läksid {a_gen} ja {b_gen}ga keset ööd Toomemäele." },
+        { "say": "Te kõnnite kolmekesi Toomemäele. Päikest pole veel kuskil. {a} ütleb, et see on alles soojendus." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_bet", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} vedas {b_gen}ga kihla, et suudab õlle kümne sekundiga ära juua. {b} hoiab telefoni stopperiga käes. Ümber on juba väike rahvahulk.",
+    "choices": [
+      { "label": "Panusta {a_gen} peale (5 €)", "if": [{ "var": "money", ">=": 5 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -5 }, { "aff": { "@a": 1 } }, { "chance": 0.5,
+          "then": [{ "money": 10 }, { "say": "9,8 sekundit! {a} röögatab. Sa võitsid 10 eurot. {b} maksab hambaid kiristades." }],
+          "else": [{ "say": "Pool õlut läheb {a_gen} särgile. Aeg: 14 sekundit. Raha on läinud. {b} naerab nii, et peab istuma." }] }] },
+      { "label": "Panusta {b_gen} peale (5 €)", "if": [{ "var": "money", ">=": 5 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -5 }, { "aff": { "@b": 1 } }, { "chance": 0.5,
+          "then": [{ "money": 10 }, { "say": "{a} läkastab kaheksandal sekundil. Sa võitsid 10 eurot. {b} lööb sulle patsu." }],
+          "else": [{ "say": "9,5 sekundit. {a} lööb klaasi lauale nagu viiking. Sinu viis eurot on nüüd {a_gen} oma." }] }] },
+      { "label": "Ole kohtunik", "do": [{ "time": 3 }, { "problem": -5 }, { "aff": { "@group": 1 } }, { "say": "Sa loed sekundeid. Kõik usaldavad sind. See on suur vastutus. Sa tuled sellega toime." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_photo", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} tahab grupipilti. {b} keeldub, sest „see valgus ei ole minu valgus“. {a} hoiab telefoni juba käes ja vaatab sind.",
+    "choices": [
+      { "label": "Tee pilt kõigist", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -3 }, { "aff": { "@a": 1 } }, { "log": "Tegid {a_gen} ja {b_gen}ga grupipildi. {b} on pildil silmad kinni." },
+               { "say": "Klõps. {b} on pildil silmad kinni ja näeb välja nagu renessansimaal. {a} paneb selle kohe Instasse." }] },
+      { "label": "Tee suur grupipilt kõigiga", "show_if": [{ "var": "group_size", ">=": 3 }], "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -3 }, { "flag": "group_photo3" }, { "aff": { "@group": 1 } }, { "log": "Tegid suure grupipildi. Kõik on peal, isegi need, kes ei tahtnud." },
+               { "say": "Kõik mahuvad pildile. Kellelgi on silmad kinni, kellelgi on õlu näos, aga see on ilus pilt. See läheb raamitult seinale." }] },
+      { "label": "Ütle {b_gen}le, et ta näeb hea välja", "do": [{ "aff": { "@b": 2 } }, { "problem": -4 },
+        { "say": "{b} pehmeneb. „Okei. Üks pilt.“ Tuleb kolmteist pilti." }] },
+      { "label": "„Pildid on mälestuste vaenlane.“", "do": [{ "aff": { "@b": 1, "@a": -1 } }, { "say": "{b}: „Täpselt.“ {a} paneb telefoni ära ja on terve järgmise tunni vaikselt solvunud." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_story", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} räägib {b_gen}le lugu sellest, kuidas sa eelmisel aastal Raekoja platsil tuvi päästsid. Seda pole kunagi juhtunud. Lugu läheb iga lausega paremaks.",
+    "choices": [
+      { "label": "Kinnita lugu", "do": [{ "problem": 4 }, { "aff": { "@a": 2 } }, { "say": "{b}: „Päriselt?“ Sa noogutad. Tuvi on nüüd ka loo järgi kotkas." }] },
+      { "label": "„Seda pole kunagi juhtunud.“", "do": [{ "aff": { "@b": 1, "@a": -1 } }, { "say": "{a}: „Võib-olla mitte SINUGA.“ {b} ei tea enam, kumba uskuda." }] },
+      { "label": "Lisa detaile", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "@group": 1 } },
+        { "log": "Lisasid {a_gen} loole kotka, politseiorkestri ja ühe peaministri." },
+        { "say": "Tuvist saab kotkas. Siis tuleb politseiorkester. Lõpuks ilmub peaminister. {b} plaksutab. {a} pühib pisarat." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_who_pays", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "Klaasid on tühjad. {a} vaatab {b_gen} poole. {b} vaatab {a_gen} poole. Siis vaatavad mõlemad sinu poole. Vaikus on täpselt nii pikk kui üks ring.",
+    "choices": [
+      { "label": "Maksan mina (12 €)", "if": [{ "var": "money", ">=": 12 }], "locked": "Raha ei jätku",
+        "do": [{ "money": -12 }, { "problem": -10 }, { "add": { "drinks": 1 } }, { "aff": { "@group": 2 } }, { "flag": "bought_round" },
+               { "say": "Sa tood ringi. {a} ja {b} vaatavad sind nagu kangelast. Kangelaseks olemine maksab täna 12 eurot." }] },
+      { "label": "„{a}, sinu kord.“", "do": [{ "aff": { "@a": -1, "@b": 1 } }, { "add": { "drinks": 1 } },
+        { "say": "{a} ohkab ja läheb leti juurde. {b} näitab sulle salaja pöialt." }] },
+      { "label": "Hiili vetsu", "do": [{ "time": 5 }, { "problem": 4 }, { "aff": { "@group": -1 } },
+        { "say": "Kui tagasi tuled, on neil uued joogid. Sinule pole. Nad ei ütle midagi. Nad ei pea midagi ütlema." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_hang", "speaker": "{A} JA {B}", "portrait": "@group",
+    "text": "{a} ja {b} ajavad juttu. Natuke jalgpallist, natuke kellegi eksist, natuke millestki, mida keegi homme ei mäleta.",
+    "choices": [
+      { "label": "Löö jutuga kaasa", "do": [{ "time": 15 }, { "problem": -8 }, { "met": "@group" }, { "say": "Viisteist minutit möödub nagu viis. Keegi ei mäleta, millest jutt oli. Oli hea." }] },
+      { "label": "Tee grupipilt", "show_if": [{ "var": "group_size", ">=": 3 }, { "task": "group_photo3" }, { "not_flag": "group_photo3" }], "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi",
+        "do": [{ "phone": -3 }, { "flag": "group_photo3" }, { "log": "Tegid grupipildi. Kolm inimest, null head nurka." }, { "say": "Klõps. Kõik on peal. Keegi ei vaata kaamerasse. Täiuslik." }] },
+      { "label": "Räägi ainult {a_gen}ga", "do": [{ "goto_friend": "@a" }] },
+      { "label": "Räägi ainult {b_gen}ga", "do": [{ "goto_friend": "@b" }] },
+      { "label": "Mine edasi", "do": [{ "met": "@group" }] }
+    ]
+  },
+
+  // ================================================================ KARDO (kaine, aga kohal)
+  {
+    "id": "kardo_meet", "speaker": "KARDO",
+    "on_enter": [{ "task_add": "kardo_snack" }],
+    "text": "Kardo seisab, käes klaas vett, ja on ainus inimene terves kvartalis, kes teab täpselt, mis kell on. Ta on kaine. Ta on alati kaine. Ta on ikka kohal. „Kuule, kui sa poe juurest mööda lähed, too mulle Red Bull ja pirukas. Ma valvan siin teie kõigi elu, see teeb näljaseks.“",
+    "choices": [
+      { "label": "„Miks sa üldse kaine oled?“", "do": [{ "time": 3 }, { "problem": -5 }, { "aff": { "kardo": 1 } },
+        { "say": "Kardo: „Keegi peab mäletama, mida Tristan teeb. Kellelgi on vaja tõendeid.“ Ta rüüpab vett nagu viskit." }] },
+      { "label": "„Räägi mõni nali.“", "do": [{ "time": 3 }, { "problem": -8 }, { "aff": { "kardo": 1 } }, { "random": [
+        { "do": [{ "say": "Kardo: „Ma olen nii kaine, et mäletan, kus Ain oma raha hoiab. Ma ei ütle.“" }] },
+        { "do": [{ "say": "Kardo: „Iga reede ütleb Janno, et täna on meie öö. Iga laupäev maksan mina tema Bolti. Ma olen tema öö.“" }] },
+        { "do": [{ "say": "Kardo: „Tead, mis on kaine olemise parim asi? Ma näen kõiki teie otsuseid. Reaalajas. Kõrgresolutsioonis.“" }] }
+      ] }] },
+      { "label": "„Toon ära.“", "do": [{ "aff": { "kardo": 1 } }, { "say": "Kardo näitab pöialt. „Pirukas olgu lihapirukas. Ma olen kaine, mitte loll.“" }] },
+      { "label": "Mine edasi", "do": [{ "met": "kardo" }] }
+    ]
+  },
+  {
+    "id": "meet_kardo", "speaker": "KARDO",
+    "text": "Kardo noogutab sulle oma veeklaasi tagant. „Elus? Hea. Kaks tundi veel ja kõik on koju jõudnud. See on minu plaan. Teil pole plaani.“",
+    "choices": [
+      { "label": "Anna Kardole Red Bull ja pirukas", "show_if": [{ "item": "kardo_snack" }],
+        "do": [{ "remove_item": "kardo_snack" }, { "flag": "fed_kardo" }, { "aff": { "kardo": 3 } }, { "problem": -5 },
+               { "log": "Tõid kainele Kardole Red Bulli ja piruka. Ta ütles, et sa oled ainuke, kes kuulab." },
+               { "say": "Kardo vaatab pirukat nagu medalit. „Sa oled ainus, kes kunagi midagi päriselt toob.“ Ta sööb selle kolme suutäiega ära." }] },
+      { "label": "Aja niisama juttu", "do": [{ "time": 10 }, { "problem": -10 }, { "aff": { "kardo": 1 } }, { "random": [
+        { "do": [{ "say": "Kardo räägib sulle kümme minutit sellest, kuidas Jasper eelmisel reedel taksojuhile laulu kirjutas. Taksojuht nuttis. Kardo maksis." }] },
+        { "do": [{ "say": "Kardo: „Mul on telefonis kaust nimega „TÕENDID“. Seal on 340 videot. Ükski neist pole minust.“" }] },
+        { "do": [{ "say": "Kardo: „Ma ei joo, sest kui ma jooksin, siis kes teid kokku korjab? Ets? Ets korjaks teid kokku nalja pärast.“" }] }
+      ] }] },
+      { "label": "Palu Kardol end koju saata", "show_if": [{ "after": "03:00" }], "if": [{ "var": "aff_kardo", ">=": 2 }], "locked": "Kardo ei tunne sind veel nii hästi",
+        "do": [{ "time": [30, 40] }, { "problem": -30 }, { "aff": { "kardo": 1 } },
+               { "log": "Kaine Kardo saatis su jala koju. Ta kontrollis, et uks läks lukku." },
+               { "say": "Kardo kõnnib su kõrval terve tee ja räägib kogu aeg, et sa ära ei jääks magama. Ukse ees ütleb ta: „Vesi. Ibuprofeen. Telefon laadima.“ Super kutt." },
+               { "goto": "home" }] },
+      { "label": "Mine edasi", "do": [{ "met": "kardo" }] }
+    ]
+  },
+  {
+    "id": "kardo_intervene", "speaker": "KARDO",
+    "text": "Kardo ilmub välja ja võtab sul joogi käest enne, kui sa jõuad protestida. „SÕBER. MIDA VITTU. VAATA MULLE OTSA. Sa oled kahe minuti kaugusel millestki, mida sa homme Google'ist otsid. VESI. KOHE.“",
+    "choices": [
+      { "label": "Joo vesi ära", "do": [{ "time": 10 }, { "problem": -25 }, { "add": { "kardo_saves": 1 } }, { "aff": { "kardo": 1 } },
+        { "log": "Kardo päästis su. Klaasi veega." },
+        { "say": "Vesi. Külm. Maailm jääb paigale. Kardo patsutab sind õlale: „Näed. Ma olen sinu ema, aga lahedam.“" }] },
+      { "label": "„Kardo, ma olen täiesti okei!“", "do": [{ "problem": -10 }, { "add": { "kardo_saves": 1 } }, { "aff": { "kardo": -1 } },
+        { "say": "Kardo: „Sa ütlesid seda viimati Emajõe ääres. Ühe kingaga.“ Ta joob su joogi ise maha. Ta on kaine. Ta valab selle lillepotti." }] },
+      { "label": "Kalli Kardot", "do": [{ "time": 3 }, { "problem": -15 }, { "add": { "kardo_saves": 1 } }, { "aff": { "kardo": 2 } },
+        { "say": "Kardo kallistab tagasi, aga ainult ühe käega. Teises on su jook, et sa seda tagasi ei võtaks." }] }
+    ]
+  },
+  {
+    "id": "call_kardo", "speaker": "KARDO (TELEFON)",
+    "text": "Kardo vastab esimese kutsega: „Ma tean, kus kõik on. Küsi.“",
+    "choices": [
+      { "label": "„Kus sa oled?“", "do": [{ "friend_where": "kardo" }], "next": "call_kardo_2" },
+      { "label": "„Tule mulle järgi.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "kardo", "chance": 0.8 } }] },
+      { "label": "„Kus kõik teised on?“", "do": [{ "phone": -2 }, { "aff": { "kardo": 1 } }, { "friend_where": "martin" }, { "friend_where": "ain" }, { "friend_where": "jasper" },
+        { "say": "Kardo: „Ja Tristan on kus iganes Tristan on. Ma ei taha teada.“" }] },
+      { "label": "„Ah, mitte midagi.“", "do": [{ "met": "kardo" }, { "say": "Kardo: „Joo vett.“ Ta paneb toru ära. Sa jood vett. Kardol on alati õigus." }] }
+    ]
+  },
+  {
+    "id": "call_kardo_2", "speaker": "KARDO (TELEFON)", "text": "Mis teed?",
+    "choices": [
+      { "label": "„Tulen sinna.“", "do": [{ "goto_friend": "kardo" }] },
+      { "label": "„Tule hoopis sina siia.“", "do": [{ "phone": -2 }, { "summon_friend": { "who": "kardo", "chance": 0.8 } }] },
+      { "label": "„Okei, hiljem.“" }
+    ]
+  },
+  {
+    "id": "in_kardo", "speaker": "KARDO HELISTAB",
+    "text": "Telefon vibreerib. Kardo: „Kontrollkõne. Oled elus? Mitu sõrme ma näitan? Okei, see oli nali, see on telefon. Kus sa oled?“",
+    "choices": [
+      { "label": "Ütle, kus oled", "do": [{ "phone": -1 }, { "aff": { "kardo": 1 } }, { "summon_friend": { "who": "kardo", "chance": 0.9 } }] },
+      { "label": "Ütle, et tuled ise tema juurde", "do": [{ "phone": -1 }, { "goto_friend": "kardo" }] },
+      { "label": "„Kõik on hästi, Kardo.“", "do": [{ "problem": -3 }, { "say": "Kardo: „Su hääl ütleb muud. Joo vett.“ Ta paneb toru ära. Kardol on muidugi õigus." }] }
+    ]
+  },
+
+  // ================================================================ KARDO GRUPIS: tal on õigus karjuda
+  {
+    "id": "g_kardo_tristan", "speaker": "KARDO JA TRISTAN", "portrait": "@group",
+    "text": "Tristan võtab taskust Westoni. Kardo vaatab seda. Terve baar jääb vaikseks. „TRISTAN. PANE. SEE. ÄRA.“ Tristan paneb selle ära. Siis võtab teise.",
+    "choices": [
+      { "label": "Toeta Kardot: „Tristan, kuula teda.“", "do": [{ "problem": -10 }, { "aff": { "kardo": 2, "tristan": -1 } }, { "flag": "kardo_saved_tristan" },
+        { "say": "Kahe vastu Tristan ei saa. Ta annab paki Kardole. Kardo paneb selle sisetaskusse nagu relvastuse." }] },
+      { "label": "„Kardo, las poiss elab.“", "do": [{ "aff": { "tristan": 2, "kardo": -1 } }, { "problem": 5 },
+        { "say": "Kardo: „Hästi. Aga kui ta ärkab Annelinnas, siis helistab ta SULLE.“ Tristan noogutab tänulikult. Ta ärkab Annelinnas." }] },
+      { "label": "Võta ise üks Weston, enne kui Kardo jõuab", "do": [{ "chance": { "var": "problem", "from": 30, "to": 100, "min": 0.15, "max": 0.8 },
+        "then": [{ "log": "Võtsid Kardo nina all Westoni. Kardo on pettunud." }, { "aff": { "kardo": -2 } }, { "blackout": true }],
+        "else": [{ "add": { "drinks": 1 } }, { "aff": { "tristan": 2, "kardo": -1 } }, { "problem": 10 }, { "say": "Kardo ei ütle midagi. See on hullem kui karjumine. Tristan aga peab sind nüüd oma bestieks." }] }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_martin", "speaker": "KARDO JA MARTIN", "portrait": "@group",
+    "text": "Martin ütleb, et turvamees vaatas teda valesti ja nüüd ta „seletab asja ära“. Kardo astub tema ette. „MARTIN. Turvamees on kaks meetrit pikk. Sina oled üks seitsekümmend viis ja täis. Istu.“",
+    "choices": [
+      { "label": "„Martin, istu.“", "do": [{ "problem": -10 }, { "aff": { "kardo": 2, "martin": 1 } },
+        { "say": "Martin istub. Kardo ostab talle limonaadi. Martin joob seda ja ütleb, et see oli tema plaan algusest peale." }] },
+      { "label": "„Ma tulen sinuga, Martin.“", "do": [{ "time": 10 }, { "problem": 15 }, { "aff": { "martin": 2, "kardo": -2 } },
+        { "say": "Kardo karjub teie mõlema peale nii valjult, et turvamees ise tuleb küsima, kas kõik on korras. Kõik on korras. Kardo on korras. Teie mitte." }] },
+      { "label": "Lase Kardol rääkida", "do": [{ "time": 5 }, { "problem": -5 }, { "aff": { "kardo": 1 } },
+        { "say": "Kardo räägib Martiniga viis minutit. Lõpuks kallistab Martin turvameest. Keegi ei tea, kuidas." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_ain", "speaker": "KARDO JA AIN", "portrait": "@group",
+    "on_enter": [{ "flag": "ain_money_known" }],
+    "text": "Ain tuleb leti juurest kaheteistkümnenda ringiga. Kardo võtab kandiku tal käest ja asendab iga õlle klaasi veega. „Ain. Sa oled helde inimene. Ole helde ka oma maksaga.“",
+    "choices": [
+      { "label": "Joo vesi koos teistega", "do": [{ "time": 5 }, { "problem": -15 }, { "aff": { "kardo": 1, "ain": 1 } },
+        { "say": "Ain joob oma vee ära ja ütleb, et see on parim õlu, mida ta täna joonud on. Kardo kirjutab selle üles. Tõendid." }] },
+      { "label": "Päästa vähemalt üks õlu", "do": [{ "problem": 8 }, { "add": { "drinks": 1 } }, { "aff": { "ain": 1, "kardo": -1 } },
+        { "say": "Sa haarad ühe õlle enne Kardot. Kardo ohkab nagu isa, kelle laps valis vale ülikooli." }] },
+      { "label": "„Ain, kust su raha üldse tuleb?“", "do": [{ "aff": { "kardo": 1 } },
+        { "say": "Ain: „Ma ei tea.“ Kardo: „Mina tean.“ Kõik vaatavad Kardot. Kardo joob vett. Ta ei ütle kunagi." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_jasper", "speaker": "KARDO JA JASPER", "portrait": "@group",
+    "text": "Jasper laulab. Kõvasti. Laua peal. Kardo vaatab kella. „JASPER. Kell on neli. Naabrid on inimesed. Laulu lõpp. Kohe.“ Jasper laulab edasi, aga nüüd sosinal. See on kuidagi hullem.",
+    "choices": [
+      { "label": "Aita Jasper laualt alla", "do": [{ "time": 3 }, { "problem": -6 }, { "aff": { "kardo": 1, "jasper": 1 } },
+        { "say": "Jasper kukub otse sinu ja Kardo kätele. Ta lõpetab laulu põrandal. Kardo plaksutab, aga ainult korra." }] },
+      { "label": "Roni ise ka lauale", "do": [{ "time": 10 }, { "problem": 10 }, { "aff": { "jasper": 2, "kardo": -1 } },
+        { "log": "Laulsid Jasperiga laua peal. Kardo filmis seda tõendiks." },
+        { "say": "Duett laua peal. Kardo filmib. „Tõendid,“ ütleb ta. „Teie pulmadeks.“" }] },
+      { "label": "„Kardo, laula ka!“", "do": [{ "time": 5 }, { "problem": -10 }, { "aff": { "kardo": 2, "jasper": 2 } },
+        { "say": "Kaine Kardo laulab ühe rea. Ta laulab nagu ingel. Keegi ei teadnud. Jasper nutab. Kardo ei tee seda enam kunagi." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_ets", "speaker": "KARDO JA ETS", "portrait": "@group",
+    "text": "Ets räägib kiisunalja. Kardo ei naera. Kardo vastab kuivalt ühe lausega. Ets naerab nii, et peab istuma. „Kardo, see oli parem kui MINU oma.“",
+    "choices": [
+      { "label": "Küsi, mis Kardo ütles", "do": [{ "problem": -8 }, { "aff": { "kardo": 1, "ets": 1 } },
+        { "say": "Kardo: „Kass on lihtsalt kaine koer.“ Ets kordab seda ja naerab uuesti. Sina ei saa aru. Sa saad aru kolm tundi hiljem." }] },
+      { "label": "Ütle, et Etsi nali oli parem", "do": [{ "aff": { "ets": 2 } },
+        { "say": "Ets osutab sulle: „AUS INIMENE.“ Kardo noogutab. „Ta on täna lihtsalt hea vibe'iga. Pole hullu.“" }] },
+      { "label": "Ole nende kahe vahel kohtunik", "do": [{ "time": 15 }, { "problem": -12 }, { "aff": { "@group": 1 } },
+        { "log": "Olid Kardo ja Etsi naljaduelli kohtunik. Viik. Kõik võitsid." },
+        { "say": "Viisteist minutit nalju. Kardo kuivad, Etsi märjad. Seis viik. Sa naersid nii, et kõht valutab." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_janno", "speaker": "KARDO JA JANNO", "portrait": "@group",
+    "on_enter": [{ "task_add": "casino_up" }],
+    "text": "Janno tahab kasiinosse. Kardo ütleb, et tuleb kaasa, aga ainult siis, kui tema hoiab kõigi raha. „Ma olen kaine. Ma olen pank. Ma ütlen, millal me lahkume.“ Janno on vaimustuses. Andre on kergendunud.",
+    "choices": [
+      { "label": "„Lähme! Kardo on pank.“", "show_if": [{ "before": "05:00" }], "next": "casino",
+        "do": [{ "time": 10 }, { "aff": { "kardo": 1, "janno": 1 } }, { "met": ["janno", "andre", "kardo"] }, { "set": { "casino_net": 0 } }, { "flag": ["went_casino", "kardo_bank"] },
+               { "say": "Kardo hoiab su rahakotti. Iga kord, kui sa võidad, sosistab ta: „Nüüd oleks hea hetk lahkuda.“" }] },
+      { "label": "„Janno, äkki täna mitte?“", "do": [{ "aff": { "kardo": 1, "janno": -1 } },
+        { "say": "Janno: „Aga täna on MEIE öö!“ Kardo: „Täna on teisipäev.“ Janno: „...On?“ Ei ole. Aga see töötas." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_truuse", "speaker": "KARDO JA TRUUSE", "portrait": "@group",
+    "text": "Truuse räägib, et Raekoja purskkaevu tudengid suudlevad öösiti päriselt. Kardo kuulab rahulikult ja kontrollib iga väidet telefonist. „Vabandust, Truuse, allikas?“ Truuse pole kunagi kohanud nii hirmsat vaenlast.",
+    "choices": [
+      { "label": "Ole Truuse poolt", "do": [{ "aff": { "truuse": 2, "kardo": -1 } },
+        { "say": "Truuse: „Allikas on minu silmad.“ Kardo: „Su silmad on joonud kuus õlut.“ Truuse: „Seda paremini nad näevad.“" }] },
+      { "label": "Ole Kardo poolt", "do": [{ "aff": { "kardo": 2, "truuse": -1 } },
+        { "say": "Kardo näitab Truusele Vikipeediat. Truuse vaatab seda kaua. „Vikipeedia on ka ainult inimeste arvamus.“" }] },
+      { "label": "„Lähme vaatame ise järele!“", "do": [{ "time": 10 }, { "problem": -10 }, { "aff": { "kardo": 1, "truuse": 1 } }, { "goto": "raekoja" },
+        { "log": "Läksid Kardo ja Truusega kontrollima, kas Raekoja tudengid suudlevad öösiti päriselt." },
+        { "say": "Te seisate kolmekesi purskkaevu ees. Kuju ei liigu. Truuse: „Nad häbenevad, sest te vaatate.“" }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+  {
+    "id": "g_kardo_jaan", "speaker": "KARDO JA JAAN", "portrait": "@group",
+    "text": "Kaks kainet inimest ühes baaris. Kardo ja Jaan tõstavad teineteisele veeklaasid. Nad räägivad hüdratatsioonist nagu veinisommeljeed. Kõik teised vaatavad neid aukartusega.",
+    "choices": [
+      { "label": "Liitu vee-degustatsiooniga", "do": [{ "time": 15 }, { "problem": -20 }, { "aff": { "kardo": 1, "jaan": 1 } },
+        { "log": "Osalesid Kardo ja Jaani vee-degustatsioonil." },
+        { "say": "Jaan: „Sellel on kerge kloori noot.“ Kardo: „Ja pikk järelmaitse.“ Sa jood kolm klaasi ja oled elus nagu ammu mitte." }] },
+      { "label": "Küsi Jaanilt tuumafüüsikast", "do": [{ "time": [90, 120] }, { "problem": -30 }, { "flag": "nuclear_talk" }, { "aff": { "jaan": 3 } },
+        { "log": "Rääkisid Jaaniga {time} minutit tuumafüüsikast. Kardo valvas, et sa jood vett." },
+        { "say": "Jaan alustab. Kardo toob iga kahekümne minuti tagant vett. {time} minutit hiljem tead, mis on kriitiline mass. Kardo teab ka. Ta kuulas." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }] }
+    ]
+  },
+
+  // ================================================================ TORTA (lihavõttemuna)
+  {
+    "id": "truuse_torta", "speaker": "TRUUSE", "portrait": "img/char/truuse.png",
+    "text": "Truuse tardub. Ta silm tõmbleb. „Mis sa ütlesid?“ Vaikus. Siis, kõigepealt sosinal ja siis valjemini: „TORTA. TORTA. TORTAAAAA!“ Ta viskab kübara õhku ja hakkab bussipeatuse katusele ronima.",
+    "choices": [
+      { "label": "Proovi teda rahustada", "next": "truuse_torta_2", "do": [{ "time": 5 }, { "problem": 8 },
+        { "say": "„Truuse, see on lihtsalt sõna.“ Truuse, juba katusel: „SEE EI OLE LIHTSALT SÕNA. SEE ON TORTA.“" }] },
+      { "label": "Karju kaasa: „TORTA!“", "next": "truuse_torta_2", "do": [{ "time": 5 }, { "problem": 15 }, { "aff": { "truuse": 2 } },
+        { "say": "Teie hääled kajavad mööda Rüütli tänavat. Kuskil süttivad aknad. Keegi helistab kuskile." }] },
+      { "label": "Filmi kõike", "if": [{ "var": "phone", ">": 0 }], "locked": "Telefon on tühi", "next": "truuse_torta_2",
+        "do": [{ "phone": -4 }, { "flag": "filmed_torta" }, { "say": "Video kestab neli minutit. Selle pealkiri on „TORTA“. Hommikuks on sel 12 000 vaatamist." }] },
+      { "label": "„KARDO! Tee midagi!“", "show_if": [{ "friend_here": "kardo" }], "next": "truuse_torta_2",
+        "do": [{ "aff": { "kardo": 1 } }, { "say": "Kardo karjub: „TRUUSE! TULE ALLA!“ Truuse karjub vastu: „TORTA!“ Esimest korda elus kaotab Kardo vaidluse." }] }
+    ]
+  },
+  {
+    "id": "truuse_torta_2", "speaker": "POLITSEI",
+    "text": "Sinised tuled. Kaks politseinikku vaatavad bussipeatuse katusele, kus Truuse seisab nagu kuju ja laulab sõna „torta“ erinevatel helikõrgustel. „Härra, tulge alla.“ Truuse: „Ainult tortaga.“",
+    "choices": [
+      { "label": "Seleta politseile, et see on lihtsalt kook", "do": [{ "time": 15 }, { "problem": 10 },
+        { "flag": ["truuse_arrested", "away_truuse"] }, { "remove_item": "torta" }, { "met": "truuse" },
+        { "log": "Truuse arreteeriti, sest keegi ütles „torta“. Ta ei kahetse midagi." },
+        { "say": "„Kook?“ küsib politseinik. Truuse karjub katuselt: „TORTA EI OLE KOOK!“ Teda viiakse autosse. Akna tagant kostab vaikselt veel üks kord: „torta.“" }] },
+      { "label": "Vaata vaikselt pealt", "do": [{ "time": 10 },
+        { "flag": ["truuse_arrested", "away_truuse"] }, { "remove_item": "torta" }, { "met": "truuse" },
+        { "log": "Vaatasid pealt, kuidas Truuse torta pärast arreteeriti." },
+        { "say": "Truuse tuuakse alla nagu kass puu otsast. Politseinik võtab tõendina kaasa ka torti, kui see sul oli. Kaarna saadab sulle ühe sõna: „miks“." }] },
+      { "label": "Jookse minema", "do": [{ "time": 5 }, { "problem": 12 },
+        { "flag": ["truuse_arrested", "away_truuse"] }, { "met": "truuse" },
+        { "log": "Jooksid minema, kui Truuse torta pärast arreteeriti. Truuse ei tea sellest. Veel." },
+        { "say": "Sa jooksed nurga taha. Selja tagant kostab viimast korda „TORTAAAA“ ja auto uks paugub kinni. Vaikus." }] }
+    ]
+  },
+  {
+    "id": "call_truuse_jail", "speaker": "TRUUSE (KONGIST)",
+    "text": "Truuse vastab sosinal: „Mul on üks kõne. Ma valisin sinu. Siin on üks tüüp, kes ütleb, et ta on ka torta pärast sees. Me oleme nüüd bestied.“",
+    "choices": [
+      { "label": "„Kas sul on kõik hästi?“", "do": [{ "phone": -2 }, { "aff": { "truuse": 1 } }, { "say": "Truuse: „Mul on parem kui kunagi varem. Nad andsid mulle teki. Tekil on muster. See muster on... ei. Ma ei ütle.“" }] },
+      { "label": "„Torta.“", "do": [{ "phone": -2 }, { "say": "Toru teises otsas on hetkeks vaikus. Siis kostab kauge, vaimustunud kisa. Keegi võtab Truuselt telefoni ära." }] },
+      { "label": "Pane toru ära", "do": [{ "met": "truuse" }] }
+    ]
+  },
+
+  // ================================================================ JUHUSLIKUD ÜLESANDED
+  {
+    "id": "s_charger", "speaker": "",
+    "text": "Pistikupesa kõrval põrandal vedeleb laadija. Valge. Natuke kõver. Sellel on kleeps: „JASPER. EMOTSIONAALNE VÄÄRTUS.“",
+    "choices": [
+      { "label": "Vii see kohe Jasperile", "do": [{ "flag": "charger_returned" }, { "aff": { "jasper": 3 } }, { "log": "Leidsid Jasperi laadija ja viisid selle talle." },
+        { "say": "Kirjutad Jasperile pildi. Kolm minutit hiljem on ta kohal ja hoiab laadijat nagu vastsündinut. „Ma kirjutan sulle laulu.“" }] },
+      { "label": "Lae enne oma telefon, siis vii", "do": [{ "time": 20 }, { "phone": 25 }, { "flag": "charger_returned" }, { "aff": { "jasper": 1 } },
+        { "log": "Leidsid Jasperi laadija. Laadisid enne oma telefoni." },
+        { "say": "Kakskümmend minutit hiljem annad Jasperile laadija. Ta katsub seda. „Soe. Miks see soe on?“ Sa ei vasta." }] },
+      { "label": "Jäta maha", "do": [{ "say": "Keegi teine leiab selle. Või mitte. Jasper otsib seda igavesti." }] }
+    ]
+  },
+  {
+    "id": "s_cone_cop", "speaker": "POLITSEI",
+    "text": "Patrullauto sõidab aeglaselt mööda. Siis peatub. Politseinik vaatab sind. Siis vaatab oranži liikluskoonust su kaenla all. „Noormees. Kas see on teie koonus?“",
+    "choices": [
+      { "label": "„Jah. Ta on minu oma. Ta nimi on Kalle.“", "do": [{ "time": 5 }, { "chance": 0.4,
+        "then": [{ "problem": -5 }, { "say": "Politseinik vaatab kaua. „Head ööd, Kalle.“ Auto sõidab edasi. Kalle on päästetud." }],
+        "else": [{ "remove_item": "cone" }, { "problem": 10 }, { "log": "Politsei võttis liikluskoonuse ära." }, { "say": "Koonus konfiskeeritakse. Sa vaatad, kuidas Kalle sõidab ära tagaistmel. Ta ei vaata tagasi." }] }] },
+      { "label": "Anna koonus vabatahtlikult tagasi", "do": [{ "remove_item": "cone" }, { "problem": -8 }, { "flag": "good_karma" },
+        { "say": "Politseinik paneb koonuse tagasi tee äärde. „Aitäh. Ja minge koju.“ Hea nõuanne. Liiga hilja." }] },
+      { "label": "Jookse koos koonusega", "do": [{ "time": 5 }, { "problem": 15 }, { "chance": 0.5,
+        "then": [{ "say": "Sa oled kiirem kui keegi ootas. Koonus ka. Te pääsete." }],
+        "else": [{ "remove_item": "cone" }, { "time": 20 }, { "say": "Koonusega on raske joosta. Sind saadakse kätte, saad noomida ja koonus jääb maha." }] }] }
+    ]
+  },
+  {
+    "id": "m_payback", "speaker": "MARTIN",
+    "text": "Martin tuleb sinu poole. Ta näeb sind. Ta mäletab hetkeks, et ta on sulle võlgu. Ta pöörab ümber.",
+    "choices": [
+      { "label": "„Martin. Mu 5 eurot.“", "do": [{ "add": { "payback_tries": 1 } }, { "chance": { "var": "aff_martin", "from": 0, "to": 6, "min": 0.15, "max": 0.85 },
+        "then": [{ "money": 5 }, { "flag": "martin_paid" }, { "log": "Martin maksis sulle 5 eurot tagasi. Ajalooline hetk." }, { "say": "Martin annab sulle viie euro. Mündid. Ühe sendi kaupa. Aga annab. Ajalugu on tehtud." }],
+        "else": [{ "problem": 4 }, { "say": "Martin: „Homme, chief. Homme kindlasti. No cap.“ Homme ei tule kunagi. Martini homme on mõiste, mitte päev." }] }] },
+      { "label": "Lase Kardol küsida", "show_if": [{ "friend_here": "kardo" }],
+        "do": [{ "money": 5 }, { "flag": "martin_paid" }, { "aff": { "kardo": 1, "martin": -1 } }, { "log": "Kardo karjus Martinilt sinu 5 eurot tagasi." },
+               { "say": "Kardo: „MARTIN.“ Ainult nimi. Martin võtab rahakoti välja nii kiiresti, et see kukub maha. Viis eurot on sinu käes." }] },
+      { "label": "Lase olla", "do": [{ "add": { "payback_tries": 1 } }, { "aff": { "martin": 1 } }, { "say": "Martin tunneb seda ja vaatab sind tänulikult. Võlg on endiselt võlg." }] }
+    ]
+  },
+  {
+    "id": "s_dog", "speaker": "",
+    "on_enter": [{ "task_add": "dog_home" }],
+    "text": "Väike karvane koer jookseb sinu juurde ja istub su jalgade ette. Kaelarihmal on silt: „Olen Muki. Kui leiad mu, vii mind Raekoja platsile. Mu inimene ootab seal.“ Muki vaatab sind. Muki on otsustanud.",
+    "choices": [
+      { "label": "Võta Muki kaasa", "do": [{ "item": "dog" }, { "problem": -10 }, { "say": "Muki kõnnib su kõrval nagu oleks ta alati seal olnud. Sa oled nüüd vastutav. Tra." }] },
+      { "label": "Kõnni minema", "do": [{ "item": "dog" }, { "say": "Sa kõnnid minema. Muki kõnnib ka. Sinu kõrval. Muki ei küsinud luba." }] }
+    ]
+  },
+  {
+    "id": "s_wallet_return", "speaker": "RAHAKOTI OMANIK",
+    "text": "Suur tüüp otsib baaris paaniliselt midagi. Su taskus olev rahakott kaalub äkki tonni. Pildil on tema.",
+    "choices": [
+      { "label": "Anna rahakott tagasi", "do": [{ "remove_item": "found_wallet" }, { "flag": ["wallet_returned", "good_karma"] }, { "money": 10 }, { "problem": -10 },
+        { "log": "Viisid leitud rahakoti omanikule tagasi. Ta tegi sulle välja ja kallistas." },
+        { "say": "Ta kallistab sind nii, et selg ragiseb, ja surub sulle pihku kümme eurot. „Inimesed on head.“ Täna jah." }] },
+      { "label": "Hoia veel alles", "do": [{ "say": "Sa ei tea isegi, miks. Rahakott on endiselt su taskus. Ülesanne ka." }] }
+    ]
+  },
+
+  // ================================================================ JASPER: ehitusmees, kes laulab
+  {
+    "id": "j_site", "speaker": "JASPER",
+    "text": "Jasperil on käed nagu kaks kinnast, mis on tehtud liivapaberist. „Valasime täna Raadil vundamenti. Kuus tundi järjest. Laulmine on hobi, kutt. Betoon on elu.“ Tal on teksadel ikka veel tsemendiplekid.",
+    "choices": [
+      { "label": "„Miks sa siis üldse laulma hakkasid?“", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "jasper": 2 } }, { "flag": "jasper_backstory" },
+        { "say": "„Objektil läks raadio katki. Kolm kuud vaikust ja segumasin. Siis hakkasin ise laulma. Töödejuhataja Rein ütles, et kui ma lõpetan, siis ta vallandab mu.“ Jasper naeratab. „Nüüd laulan iga päev tellingutel. Kuueteistkümnendal korrusel on parim akustika.“" }] },
+      { "label": "„Näita, kuidas telliseid laotakse.“", "do": [{ "time": 10 }, { "problem": -6 }, { "aff": { "jasper": 1 } },
+        { "say": "Jasper ehitab joogialustest kahe minutiga täiesti sirge seina. Baarman tuleb vaatama. Keegi plaksutab. Jasper lammutab selle ühe liigutusega ja ütleb: „Vundament oli vale.“" }] },
+      { "label": "„Mis su elu moto on?“", "do": [{ "aff": { "jasper": 1 } }, { "problem": -5 },
+        { "say": "Jasper vaatab sulle sügavalt silma ja ütleb rahulikult: „Situn, nikun, keevitan.“ Siis koputab sulle õlale. „Selles järjekorras. Ära kunagi aja järjekorda segi.“" }] },
+      { "label": "„Mida sa praegu ehitad?“", "do": [{ "time": 5 }, { "aff": { "jasper": 1 } }, { "flag": "jasper_backstory" },
+        { "say": "„Viiekorruseline maja Raadil. Kolmanda korruse nurgakorter on minu oma. Mitte päriselt. Aga ma panin sinna seina sisse kirja. Mitte keegi ei tea, mis seal on.“ Ta ei ütle sulle ka." }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "jasper" }] }
+    ]
+  },
+  {
+    "id": "j_foreman", "speaker": "JASPER",
+    "text": "Jasperi telefon heliseb. Ekraanil: „REIN (TÖÖ)“. Jasper vaatab seda nagu pommi. „Putsi. Mul on kell seitse objekt. Rein helistab ainult siis, kui ta TEAB.“",
+    "choices": [
+      { "label": "„Mine koju magama, Jasper.“", "do": [{ "flag": "jasper_sent_home" }, { "aff": { "jasper": 1 } }, { "problem": -5 },
+        { "log": "Saatsid Jasperi koju magama, sest tal oli kell 7 objekt." },
+        { "say": "Jasper ohkab, kallistab sind ja ütleb: „Sa oled hea inimene. Rein oleks sinu üle uhke.“ Ta kõnnib koju ja laulab vaikselt." }] },
+      { "label": "„Üks laul veel!“", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "jasper": 2 } }, { "flag": "jasper_stayed" },
+        { "say": "Üks laul. Siis teine. Rein saadab sõnumi: „Ma kuulen sind.“ Jasper laulab selle peale kõvemini." }] },
+      { "label": "Võta toru ja räägi ise Reiniga", "do": [{ "time": 5 }, { "aff": { "jasper": 1 } }, { "random": [
+        { "do": [{ "problem": 6 }, { "say": "Rein: „Kes see on?“ Sina: „Jasperi advokaat.“ Rein paneb toru ära. Jasper vaatab sind nagu kangelast. Homme on tal probleeme." }] },
+        { "do": [{ "problem": -5 }, { "flag": "jasper_sent_home" }, { "say": "Rein on täiesti normaalne mees. Ta palub viisakalt, et sa Jasperi koju saadaksid. Sa saadad. Jasper on pettunud, aga täna öösel magab." }] }
+      ] }] }
+    ]
+  },
+  {
+    "id": "j_level", "speaker": "JASPER",
+    "text": "Jasper võtab seljakotist vesiloodi. Päris vesiloodi. Ta paneb selle letile ja vaatab mullikest kaua. „Kaks millimeetrit kaldu. Seepärast õlu siin alati ühele poole voolabki.“",
+    "choices": [
+      { "label": "„Miks sul vesilood kaasas on?“", "do": [{ "problem": -5 }, { "aff": { "jasper": 1 } },
+        { "say": "„Miks sul EI OLE vesilood kaasas?“ Ta küsib seda täiesti tõsiselt. Sul ei ole vastust." }] },
+      { "label": "Aita tal baarileti alla õllekorke toppida", "do": [{ "time": 10 }, { "problem": -8 }, { "aff": { "jasper": 2 } },
+        { "log": "Loodisite Jasperiga baarileti õllekorkidega sirgeks." },
+        { "say": "Kümme minutit hiljem on lett täiesti sirge. Baarman ei saa aru, mis juhtus, aga õlu ei voola enam ühele poole. Jasper on õnnelik nagu laps." }] },
+      { "label": "Jäta ta oma mulli vaatama", "do": [{ "met": "jasper" }] }
+    ]
+  },
+  {
+    "id": "j_dream", "speaker": "JASPER",
+    "text": "Jasper istub äärekivile ja on korraga väga vaikne. „Tead, mis mu plaan on? Ehitan emale maja. Oma kätega. Põlvamaale. Ja hoovi väikese lava. Ainult üks pink publikule. Emale.“",
+    "choices": [
+      { "label": "„Ma tulen appi katust panema.“", "do": [{ "time": 10 }, { "problem": -12 }, { "aff": { "jasper": 3 } }, { "flag": "jasper_dream" },
+        { "log": "Lubasid Jasperile appi tulla tema ema maja katust panema." },
+        { "say": "Jasper vaatab sind kaua. „Päriselt?“ Sa noogutad. Ta ei ütle midagi, aga tal on silmad märjad. Siis ütleb: „Sa pead siis kell kuus üleval olema.“ Muidugi." }] },
+      { "label": "„Mis laulu sa seal esimesena laulad?“", "do": [{ "time": 5 }, { "problem": -8 }, { "aff": { "jasper": 2 } }, { "flag": "jasper_dream" },
+        { "say": "Ta laulab sulle seda vaikselt. See on laul, mille ta kirjutas tellingutel. Seal on rida tsemendist ja üks emast. See on päriselt ilus." }] },
+      { "label": "„Ehitajad ei ela kunagi enda ehitatud majas.“", "do": [{ "aff": { "jasper": -2 } }, { "problem": 5 },
+        { "say": "Jasper tõuseb püsti. „Mina elan.“ Ta läheb ära. Sul on piinlik. Õigusega." }] }
+    ]
+  },
+  {
+    "id": "j_hardhat", "speaker": "JASPER",
+    "text": "Jasper tuleb Seika kollase ehituskiivriga. Kõik vaatavad. „Tööohutus, mees. Siin lendab igasugust sitta.“ Kellegi jook lendab otse kiivri pihta. Jasperil on õigus.",
+    "choices": [
+      { "label": "Küsi, kas tal teist kiivrit on", "do": [{ "aff": { "jasper": 2 } }, { "problem": -6 }, { "flag": "hardhat" },
+        { "say": "Muidugi on. Ta võtab seljakotist teise. Te tantsite kahekesi kiivritega. Turvamees noogutab tunnustavalt." }] },
+      { "label": "„Jasper, see on ööklubi.“", "do": [{ "aff": { "jasper": -1 } },
+        { "say": "Jasper: „Ehitusplats on ka ööklubi, kui piisavalt kaua seal oled.“ Ta jätab kiivri pähe." }] },
+      { "label": "Jätka oma teed", "do": [{ "met": "jasper" }] }
+    ]
+  },
+
+  // ================================================================ KERMO (3% Rüütlil)
+  {
+    "id": "kermo", "speaker": "KERMO", "music": "audio/amb/chinese.ogg",
+    "on_enter": [{ "flag": "met_kermo" }],
+    "text": "Kuskilt hakkab mängima Hiina klassikaline muusika. Keegi ei tea, kust. Sinu ette astub mees nimega Kermo, käed selja taga, pilk kaugel horisondil. Ta vaatab sulle otsa ja ütleb aeglaselt, iga sõna rõhutades: „China will not fire the first shot. But China will not allow you to fire the second shot.“",
+    "choices": [
+      { "label": "„...Okei?“", "next": "kermo_2", "do": [{ "time": 2 }, { "say": "Kermo noogutab, nagu oleksid sa just midagi väga olulist mõistnud. Sa ei mõistnud. Muusika läheb valjemaks." }] },
+      { "label": "„Mis see tähendab, Kermo?“", "next": "kermo_2", "do": [{ "time": 20 }, { "problem": -10 },
+        { "log": "Kermo seletas sulle Rüütlil 20 minutit geopoliitikat. Taustal mängis Hiina klassikaline muusika." },
+        { "say": "Kermo seletab kakskümmend minutit. Seal on Sun Tzu, Taiwani väin, Tartu linnavalitsus ja üks lugu tema onust Võrumaalt. Lõpuks saad aru. Siis ei saa enam aru." }] },
+      { "label": "Paku talle õlut", "next": "kermo_2", "do": [{ "time": 2 },
+        { "say": "Kermo lükkab õlle õrnalt eemale. „In China, we drink tea.“ Ta pole kunagi Hiinas käinud. Ta on Põlvast." }] },
+      { "label": "„Ma tulistan esimesena.“", "next": "kermo_2", "do": [{ "problem": 10 },
+        { "say": "Muusika jääb järsku vait. Kermo vaatab sind kaua. Siis naeratab väga, väga aeglaselt. Muusika hakkab uuesti mängima. Kõvemini." }] }
+    ]
+  },
+  {
+    "id": "kermo_2", "speaker": "KERMO", "music": "audio/amb/chinese.ogg",
+    "text": "Kermo kummardab kergelt. „Remember this night.“ Ta pöörab ringi ja kõnnib aeglaselt Rüütli tänava lõppu. Muusika läheb temaga kaasa. Keegi teine ei paista seda kuulvat.",
+    "choices": [
+      { "label": "Kummarda vastu", "do": [{ "problem": -8 }, { "say": "Sa kummardad. Kuskil kaugel lööb gong. Su probleemid tunduvad korraga väga väikesed võrreldes Hiina Rahvavabariigi pikaajalise strateegiaga." }] },
+      { "label": "Vaata talle järele", "do": [{ "say": "Ta keerab nurga taha. Muusika vaibub. Üks taksojuht vaatab sind ja küsib: „Kas sa nägid ka teda?“" }] }
+    ]
+  },
+
+  {
+    "id": "g_ain_kardo_nurks", "speaker": "AIN JA KARDO", "portrait": "@group",
+    "text": "Ain ja Kardo on mingil põhjusel täiesti endast väljas. Ain: „NURKS. Mida vittu see Nurks üldse on? Kes seal käib?“ Kardo, kaine ja ometi punane: „Täpselt. Tra, ma ei saa sellest kohast aru.“ Ain lööb rusikaga lauda: „Nurks tuleb kinni panna ja sinna tuleb teha Vennad Vuksid. Lõpp.“",
+    "choices": [
+      { "label": "„Vennad Vuksid Nurksi asemele!“", "do": [{ "problem": -8 }, { "aff": { "ain": 2, "kardo": 2 } }, { "flag": "vuksid_movement" },
+        { "log": "Toetasid Aini ja Kardo kampaaniat: Nurks maha, Vennad Vuksid asemele." },
+        { "say": "Ain kallistab sind. Kardo avab telefoni ja hakkab linnavalitsusele kirja kirjutama. Ta on kaine, ta mõtleb seda tõsiselt. Kirjas on kolm lõiku ja üks „putsi“." }] },
+      { "label": "„Mis teil Nurksi vastu on?“", "do": [{ "time": 10 }, { "aff": { "ain": -1, "kardo": -1 } }, { "problem": 6 },
+        { "say": "Viga. Kümme minutit kahekordset monoloogi. Ain loetleb põhjusi, Kardo parandab tema statistikat. Lõpuks ütlevad mõlemad korraga: „Vennad Vuksid.“ Sa ei saanud ikka aru." }] },
+      { "label": "Kaitse Nurksi", "do": [{ "aff": { "ain": -2, "kardo": -2 } }, { "problem": 10 },
+        { "say": "Vaikus. Ain vaatab sind nagu reeturit. Kardo, kes ei vihastu kunagi: „Mida vittu.“ Sa lähed parem ise ära." }] },
+      { "label": "Jäta nad omavahele", "do": [{ "met": "@group" }, { "say": "Lahkudes kuuled veel: „...ja SEEPÄRAST, tra, Vennad Vuksid!“" }] }
+    ]
+  }
+]
